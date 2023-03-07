@@ -86,7 +86,8 @@ const GlobalStyle = createGlobalStyle`
   time,
   mark,
   audio,
-  video {
+  video,
+  input {
     margin: 0;
     padding: 0;
     border: 0;
@@ -133,6 +134,9 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box !important;
     font-family: "Lato", sans-serif;
+  }
+  *:focus {
+    outline: none
   }
   :root {
     --black: #151515;
