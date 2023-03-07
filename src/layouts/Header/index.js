@@ -13,10 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleClick = useCallback((e) => {
-    if (e.target.parentElement === loggedUser.current) {
-      setShowLogOut(!showLogOut);
-      return;
-    }
+    if (e.target.parentElement === loggedUser.current) return;
     setShowLogOut(false);
   });
 
@@ -52,7 +49,7 @@ const Header = () => {
       <S.LoggedUser
         ref={loggedUser}
         active={showLogOut}
-        onClick={() => setShowLogOut(true)}
+        onClick={() => setShowLogOut(!showLogOut)}
       >
         <IoChevronDownSharp />
         <img src={user.profilePicture} />
