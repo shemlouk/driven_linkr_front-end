@@ -95,7 +95,7 @@ export const PostContent = styled.div`
     }
 `
 
-export const LinkPreview = styled.a`
+export const LinkPreview = styled.div`
     display: flex;
     width: 100%;
     border-radius: 12px;
