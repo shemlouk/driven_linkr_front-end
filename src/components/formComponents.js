@@ -33,6 +33,8 @@ export const Submit = styled.button`
   color: white;
   margin-bottom: 22px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   :hover {
     filter: brightness(1.1);
   }
