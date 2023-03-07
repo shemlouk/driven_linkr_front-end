@@ -1,18 +1,25 @@
 import styled from "styled-components";
 
-export const PostListing = styled.div`
-
+export const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 70%;
     margin: 0 auto;
     margin-top: 100px;
 `
 
+export const PostListing = styled.div`
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+`
+
 export const PostBox = styled.div`
     display: flex;
-    width: 100%;
-    min-width: 375px;
+    max-width: 700px;
+    min-width: 500px;
     height: 278px;
     margin-bottom: 16px;
     background-color: #171717;

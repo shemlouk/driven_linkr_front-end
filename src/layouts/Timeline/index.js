@@ -1,12 +1,15 @@
 import Header from "../Header/index"
 import * as P from "./styles"
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
+import WritePost from "../../components/WritePost";
 
 const Timeline = () => {
     return (
         <>
             <Header />
-            <P.PostListing>
+            <P.PageContainer>
+                <WritePost />
+                <P.PostListing>
                 <P.PostBox>
                     <P.LeftSide>
                         <img src="https://www.w3schools.com/howto/img_avatar.png" />
@@ -69,7 +72,8 @@ const Timeline = () => {
                         </P.PostContent>
                     </P.RightSide>
                 </P.PostBox>
-            </P.PostListing>
+                </P.PostListing>
+            </P.PageContainer>
         </>
 
     )
