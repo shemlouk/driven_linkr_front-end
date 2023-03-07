@@ -1,11 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import SessionContext from "./hooks/SessionContext.js";
 import SignUp from "./pages/SignUp/index.js";
 import SignIn from "./pages/SignIn/index.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const sessionData = JSON.parse(localStorage.getItem("session"));
+    setSession(sessionData);
+  }, []);
+
   return (
     <SessionContext.Provider value={session}>
       <BrowserRouter>
