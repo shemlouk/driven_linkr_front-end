@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
-const GlobalStyles = styled.GlobalStyles`
+const GlobalStyles = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
       v2.0 | 20110126
       License: none (public domain)
@@ -140,6 +140,10 @@ const GlobalStyles = styled.GlobalStyles`
     --lightgray: #9f9f9f;
     --blue: #1877f2;
     --red: #ac0000;
+  }
+  body {
+    background-color: var(--gray);
+    height: 100vh;
   }
 `;
 
