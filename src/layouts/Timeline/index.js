@@ -1,25 +1,11 @@
-import * as H from "../../components/Header"
+import Header from "../Header/index"
 import * as P from "./styles"
-import { IoSearchSharp, IoChevronDownSharp, IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-
-
+import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 
 const Timeline = () => {
     return (
         <>
-            <H.Header>
-                <H.LogoBox>
-                    linkr
-                </H.LogoBox>
-                <H.SearchBar>
-                    <input placeholder="Search for people" />
-                    <div><IoSearchSharp /></div>
-                </H.SearchBar>
-                <H.LoggedUser>
-                    <div><IoChevronDownSharp /></div>
-                    <img src="https://www.w3schools.com/howto/img_avatar.png" />
-                </H.LoggedUser>
-            </H.Header>
+            <Header />
             <P.PostListing>
                 <P.PostBox>
                     <P.LeftSide>
@@ -47,7 +33,7 @@ const Timeline = () => {
                                     <p>Slipknot's official audio stream for 'All Hope Is Gone' from the album, All Hope Is Gone - available now on Roadrunner Records. Download it at https://slipkn...</p>
                                     <p>https://www.youtube.com/watch?v=Wn2w3j_xmbw&ab_channel=Slipknot</p>
                                 </div>
-                                <img src="https://i.ytimg.com/vi/Wn2w3j_xmbw/maxresdefault.jpg"/>
+                                <img src="https://i.ytimg.com/vi/Wn2w3j_xmbw/maxresdefault.jpg" />
                             </P.LinkPreview>
                         </P.PostContent>
                     </P.RightSide>
@@ -78,7 +64,7 @@ const Timeline = () => {
                                     <p>Slipknot's official audio stream for 'All Hope Is Gone' from the album, All Hope Is Gone - available now on Roadrunner Records. Download it at https://slipkn...</p>
                                     <p>https://www.youtube.com/watch?v=Wn2w3j_xmbw&ab_channel=Slipknot</p>
                                 </div>
-                                <img src="https://i.ytimg.com/vi/Wn2w3j_xmbw/maxresdefault.jpg"/>
+                                <img src="https://i.ytimg.com/vi/Wn2w3j_xmbw/maxresdefault.jpg" />
                             </P.LinkPreview>
                         </P.PostContent>
                     </P.RightSide>
