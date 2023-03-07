@@ -38,10 +38,13 @@ const SignIn = ({ setSession }) => {
         data: { token, username, profilePicture },
       } = await axios.post(`${API_URL}/signin`, formData);
 
-      setSession({
+      const sessionData = {
         auth: { headers: { Authorization: `Bearer ${token}` } },
         user: { username, profilePicture },
-      });
+      };
+
+      localStorage.session = JSON.stringify(sessionData);
+      setSession(sessionData);
 
       navigate("/timeline");
     } catch ({ response: { status } }) {
