@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SessionContext from "./hooks/SessionContext.js";
+import Timeline from "./layouts/Timeline/index.js";
 import SignUp from "./pages/SignUp/index.js";
 import SignIn from "./pages/SignIn/index.js";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<SignIn {...{ setSession }} />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/timeline" element={<Timeline />} />
         </Routes>
       </BrowserRouter>
     </SessionContext.Provider>
