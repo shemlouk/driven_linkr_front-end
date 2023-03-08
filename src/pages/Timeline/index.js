@@ -1,8 +1,8 @@
-import Header from "../Header/index";
+import Header from "../../layouts/Header/index";
 import React, { useState, useEffect } from "react";
 import * as P from "./styles";
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-import WritePost from "../../components/WritePost";
+import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 
 const Timeline = () => {
@@ -16,7 +16,6 @@ const Timeline = () => {
 
             try {
                 const res = await axios.get("https://jsonplaceholder.typicode.com/posts")
-                console.log(res.data.slice(0, 20))
                 setPostList(res.data.slice(0, 20))
                 setIsLoading(false)
 

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SessionContext from "./hooks/SessionContext.js";
-import Timeline from "./layouts/Timeline/index.js";
+import Timeline from "./pages/Timeline/index.js";
 import SignUp from "./pages/SignUp/index.js";
 import SignIn from "./pages/SignIn/index.js";
 import { useState } from "react";
