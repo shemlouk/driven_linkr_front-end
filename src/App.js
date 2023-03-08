@@ -3,18 +3,12 @@ import SessionContext from "./hooks/SessionContext.js";
 import Timeline from "./layouts/Timeline/index.js";
 import SignUp from "./pages/SignUp/index.js";
 import SignIn from "./pages/SignIn/index.js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const App = () => {
   const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    const sessionData = JSON.parse(localStorage.getItem("session"));
-    setSession(sessionData);
-  }, []);
-
   return (
-    <SessionContext.Provider value={session}>
+    <SessionContext.Provider value={{ session, setSession }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignIn {...{ setSession }} />} />
