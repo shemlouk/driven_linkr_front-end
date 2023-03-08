@@ -150,6 +150,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: var(--gray);
     height: 100vh;
+    min-width: 375px;
   }
 `;
 

@@ -13,6 +13,10 @@ export const Header = styled.header`
   top: 0;
   left: 0;
   z-index: 1;
+  @media (max-width: 768px) {
+    min-width: 375px;
+    padding: 0px;
+  }
 `;
 
 export const LogoBox = styled.div`
@@ -24,6 +28,9 @@ export const LogoBox = styled.div`
   a {
     color: #ffffff;
     text-decoration: none;
+  }
+  @media (max-width: 768px) {
+    margin-left: 5%;
   }
 `;
 
@@ -50,6 +57,7 @@ export const LoggedUser = styled.div`
     height: 53px;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
   }
 
   ul {
@@ -76,6 +84,9 @@ export const LoggedUser = styled.div`
     :hover {
       text-decoration: underline;
     }
+  }
+  @media (max-width: 768px) {
+    margin-right: 5%;
   }
 `;
 
@@ -112,5 +123,13 @@ export const SearchBar = styled.div`
     height: 100%;
     font-size: 2em;
     color: #c6c6c6;
+  }
+
+  @media (max-width: 768px) {
+    position: absolute;
+    width: 90%;
+    margin: 0% 5%;
+    top: 82px;
+    z-index: -2;
   }
 `;
