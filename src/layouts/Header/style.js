@@ -52,7 +52,7 @@ export const LoggedUser = styled.div`
     cursor: pointer;
   }
 
-  div {
+  ul {
     width: 150px;
     height: 47px;
     display: ${({ active }) => (active ? "flex" : "none")};
@@ -60,15 +60,18 @@ export const LoggedUser = styled.div`
     padding-left: 37px;
     padding-bottom: 10px;
     position: absolute;
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: 0.05em;
-    color: white;
     background: #171717;
     border-radius: 0px 0px 0px 20px;
     bottom: -47px;
     right: -47px;
     z-index: -1;
+  }
+
+  li {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.05em;
+    color: white;
     cursor: pointer;
     :hover {
       text-decoration: underline;

@@ -53,14 +53,17 @@ const SignUp = () => {
               type={input.type}
               disabled={isLoading}
               placeholder={input.placeholder}
+              data-test={input.dataTest}
             />
           </Fragment>
         ))}
-        <F.Submit disabled={isLoading}>
+        <F.Submit disabled={isLoading} data-test="sign-up-btn">
           {isLoading ? <ButtonSpinner /> : "Sign Up"}
         </F.Submit>
       </form>
-      <Link to="/">Switch back to log in</Link>
+      <Link to="/" data-test="login-link">
+        Switch back to log in
+      </Link>
     </SignPage>
   );
 };

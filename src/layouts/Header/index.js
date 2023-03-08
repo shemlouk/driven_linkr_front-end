@@ -87,8 +87,12 @@ const Header = () => {
             onClick={() => setShowLogOut(!showLogOut)}
           >
             <IoChevronDownSharp />
-            <img src={sessionData?.user?.profilePicture} />
-            <div onClick={logout}>Logout</div>
+            <img src={sessionData?.user?.profilePicture} data-test="avatar" />
+            <ul data-test="menu">
+              <li onClick={logout} data-test="logout">
+                Logout
+              </li>
+            </ul>
           </S.LoggedUser>
         </S.Header>
       )}

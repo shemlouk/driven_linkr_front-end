@@ -73,14 +73,17 @@ const SignIn = ({ setSession }) => {
               type={input.type}
               disabled={isLoading}
               placeholder={input.placeholder}
+              data-test={input.dataTest}
             />
           </Fragment>
         ))}
-        <F.Submit disabled={isLoading}>
+        <F.Submit disabled={isLoading} data-test="login-btn">
           {isLoading ? <ButtonSpinner /> : "Sign In"}
         </F.Submit>
       </form>
-      <Link to="/signup">First time? Create an account!</Link>
+      <Link to="/signup" data-test="sign-up-link">
+        First time? Create an account!
+      </Link>
     </SignPage>
   );
 };
