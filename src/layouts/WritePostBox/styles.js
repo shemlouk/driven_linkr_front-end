@@ -1,26 +1,6 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
-const WritePost = () => {
-    return (
-        <>
-            <WritePostBox>
-                <LoggedUser>
-                    <img src="https://www.w3schools.com/howto/img_avatar.png"/>
-                </LoggedUser>
-                <PublishForm>
-                    <p>What are you going to share today?</p>
-                    <input className="url-input" placeholder="http://..." />
-                    <input className="desc-input" placeholder="Awesome article about #Javascript..." />
-                    <button>Publicar</button>
-                </PublishForm>
-            </WritePostBox>
-        </>
-    )
-}
-
-export default WritePost
-
-const WritePostBox = styled.div`
+export const WritePostBox = styled.div`
     display: flex;
     max-width: 700px;
     min-width: 500px;
@@ -30,7 +10,7 @@ const WritePostBox = styled.div`
     border-radius: 16px;
 `
 
-const LoggedUser = styled.div`
+export const LoggedUser = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,7 +24,7 @@ const LoggedUser = styled.div`
     }
 `
 
-const PublishForm = styled.form`
+export const PublishForm = styled.form`
     display: flex;
     flex-direction: column;
     width: 100%;
