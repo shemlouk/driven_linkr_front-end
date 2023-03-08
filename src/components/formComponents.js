@@ -9,7 +9,7 @@ export const Input = styled.input`
   font-family: "Oswald", sans-serif;
   font-weight: 700;
   font-size: 27px;
-  line-height: 40px;
+  padding-bottom: 5px;
   margin-bottom: 13px;
   padding-left: 17px;
   :focus {
@@ -31,6 +31,7 @@ export const Submit = styled.button`
   font-size: 22px;
   line-height: 33px;
   color: white;
+  padding-bottom: 5px;
   margin-bottom: 22px;
   cursor: pointer;
   position: relative;
