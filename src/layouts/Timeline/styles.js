@@ -3,17 +3,34 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 125px;
+`
+
+export const TitleBox = styled.div`
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 43px;
+    color: #FFFFFF;
+    margin-bottom: 42px;
+`
+
+export const ContentWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+`
+
+export const PostWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
 `
 
 export const PostListing = styled.div`
-
     display: flex;
     flex-direction: column;
-    width: 100%;
-    margin: 0 auto;
 `
 
 export const PostBox = styled.div`
@@ -133,5 +150,41 @@ export const LinkPreview = styled.div`
         width: 155px;
         height: 155px;
         border-radius: 0px 12px 12px 0px;
+    }
+`
+
+export const SideMenu = styled.div`
+    min-width: 300px;
+    height: 400px;
+    background-color: #171717;
+    margin-left: 18px;
+    border-radius: 12px;
+
+    p {
+        display: flex;
+        box-sizing: border-box;
+        padding-left: 16px;
+        align-items: center;
+        width: 100%;
+        height: 60px;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        color: #FFFFFF;
+        border-bottom: 1px solid #484848;
+    }
+
+    ul {
+        font-size: 19px;
+        font-family: "Lato", sans-serif;
+        font-weight: 700;
+        box-sizing: border-box;
+        padding-left: 16px;
+        color: #FFFFFF;
+        margin-top: 24px;
+
+        li {
+            margin-bottom: 16px;
+        }
     }
 `
