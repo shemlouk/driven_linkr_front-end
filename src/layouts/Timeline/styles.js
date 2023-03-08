@@ -188,3 +188,14 @@ export const SideMenu = styled.div`
         }
     }
 `
+
+export const SpecialMessage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: white;
+    letter-spacing: 0.1em;
+`
