@@ -13,7 +13,7 @@ export default function Trending() {
         console.log(session);
         getTrending();
         console.log(session);
-    }, []);
+    });
 
     async function getTrending() {
         try {
