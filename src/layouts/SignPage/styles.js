@@ -5,6 +5,9 @@ export const Container = styled.main`
   height: 100%;
   display: flex;
   align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const FormContainer = styled.div`
@@ -23,7 +26,15 @@ export const FormContainer = styled.div`
   form {
     width: 80%;
     max-width: 429px;
-    min-width: 330px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: 230px;
+    margin-bottom: 91px;
+    input,
+    button {
+      height: 55px;
+    }
   }
 `;
 
@@ -50,5 +61,23 @@ export const Banner = styled.div`
     max-width: 442px;
     font-size: 43px;
     line-height: 64px;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 200px;
+    padding: 0px;
+    margin-bottom: 40px;
+    align-items: center;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    h1 {
+      font-size: 76px;
+      line-height: 76px;
+    }
+    p {
+      font-size: 23px;
+      max-width: 500px;
+      line-height: 34px;
+      text-align: center;
+    }
   }
 `;
