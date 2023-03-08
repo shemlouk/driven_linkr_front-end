@@ -4,6 +4,7 @@ import * as P from "./styles";
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
+import Trending from "../../layouts/Trending";
 
 const Timeline = () => {
 
@@ -77,19 +78,7 @@ const Timeline = () => {
                             )}
                         </P.PostListing>
                     </P.PostWrapper>
-                    <P.SideMenu>
-                        <p>trending</p>
-                        <ul>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                            <li># javascript</li>
-                        </ul>
-                    </P.SideMenu>
+                    <Trending/>
                 </P.ContentWrapper>
             </P.PageContainer>
         </>
