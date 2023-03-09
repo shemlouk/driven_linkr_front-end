@@ -199,3 +199,7 @@ export const SpecialMessage = styled.div`
     color: white;
     letter-spacing: 0.1em;
 `
+
+export const ImageCover = styled.img`
+    object-fit: cover;
+`

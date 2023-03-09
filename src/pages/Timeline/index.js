@@ -10,18 +10,11 @@ import HashtagContext from "../../hooks/HashtagContext";
 import { useParams } from "react-router-dom";
 
 const Timeline = () => {
-    const { hashtagName } = useParams();
     const { session } = useContext(SessionContext);
-    const { hashtag, setHashtag } = useContext(HashtagContext);
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
 
     useEffect(() => {
-        const localSession = JSON.parse(localStorage.getItem("session"));
-        if (!localSession || !hashtagName) {
-            setHashtag(null);
-        }
-        
         async function getPosts() {
             try {
                 const res = await axios.get("https://jsonplaceholder.typicode.com/posts")
@@ -33,31 +26,21 @@ const Timeline = () => {
                 alert("An error occurred while trying to fetch the posts, please refresh the page.")
             }
         }
-        async function getPostsWithHashtag() {
-            try {
-                const res = (await axios.get(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag.id}`, localSession.auth)).data;
-                setPostList(res.slice(0, 20));
-                setIsLoading(false);
-            } catch (error) {
-                console.error(`getPostWithHashtag: ${error}`);
-                alert("An error occurred while trying to fetch the posts, please refresh the page.");
-            }
-        }
 
-        hashtagName ? getPostsWithHashtag() : getPosts();
+        getPosts();
         
-    }, [hashtagName])
+    }, [])
 
     return (
         <>
             <Header />
             <P.PageContainer>
                 <P.TitleBox>
-                    { hashtagName? (`# ${hashtag.hashtag}`) : ("timeline")}
+                    timeline
                 </P.TitleBox>
                 <P.ContentWrapper>
                     <P.PostWrapper>
-                        { hashtagName? (null) : (<WritePost />)}
+                        {session ? <WritePost /> : null}
                         <P.PostListing>
                             {isLoading ? (
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>
