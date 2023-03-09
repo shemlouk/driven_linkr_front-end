@@ -5,7 +5,7 @@ import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
-import SessionContext from "../../hooks/SessionContext";
+import {SessionContext} from "../../hooks/SessionContext";
 import HashtagContext from "../../hooks/HashtagContext";
 import { useParams } from "react-router-dom";
 

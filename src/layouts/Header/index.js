@@ -1,15 +1,15 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
+import profilePicture from "../../assets/defaultProfilePicture.webp";
 import { IoSearchSharp, IoChevronDownSharp } from "react-icons/io5";
 import LoadingSpinner from "../../components/LoadingSpinner.js";
-import SessionContext from "../../hooks/SessionContext";
+import { SessionContext } from "../../hooks/SessionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../utils/constants";
 import * as S from "./style.js";
 import axios from "axios";
 
 const Header = () => {
-  const { setSession, session } = useContext(SessionContext);
-  const [sessionData, setSessionData] = useState(null);
+  const { session, updateSession, isLoggedIn } = useContext(SessionContext);
   const [showLogOut, setShowLogOut] = useState(false);
   const [isLoading, setIsLoading] = useState(null);
   const profileRef = useRef(null);
@@ -23,9 +23,9 @@ const Header = () => {
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
-      await axios.delete(`${API_URL}/signin`, sessionData.auth);
+      await axios.delete(`${API_URL}/signin`, session.auth);
       delete localStorage.session;
-      setSession(null);
+      updateSession(null);
       navigate("/");
     } catch ({ response }) {
       setIsLoading(false);
@@ -34,32 +34,7 @@ const Header = () => {
     }
   });
 
-  const validateSession = useCallback(async () => {
-    setIsLoading(true);
-    const localSession = JSON.parse(localStorage.getItem("session"));
-    if (!localSession) {
-      alert("Can't access this page.");
-      navigate("/");
-      return;
-    }
-    try {
-      await axios.get(`${API_URL}/signin/validate`, localSession.auth);
-      setSession({ session: localSession, setSession });
-      setSessionData({ ...localSession });
-      setIsLoading(false);
-    } catch ({ response }) {
-      alert("Session expired! Please sign in again.");
-      console.error(response);
-      navigate("/");
-    }
-  });
-
   useEffect(() => {
-    if (!session) {
-      validateSession();
-    } else {
-      setSessionData(session);
-    }
     window.addEventListener("click", handleClick);
     return () => {
       window.removeEventListener("click", handleClick);
@@ -84,10 +59,13 @@ const Header = () => {
           <S.LoggedUser
             ref={profileRef}
             active={showLogOut}
-            onClick={() => setShowLogOut(!showLogOut)}
+            onClick={() => setShowLogOut(!showLogOut && isLoggedIn)}
           >
             <IoChevronDownSharp />
-            <img src={sessionData?.user?.profilePicture} data-test="avatar" />
+            <img
+              src={isLoggedIn ? session.user.profilePicture : profilePicture}
+              data-test="avatar"
+            />
             <ul data-test="menu">
               <li onClick={logout} data-test="logout">
                 Logout
