@@ -1,5 +1,5 @@
+import { SessionContextProvider } from "./hooks/SessionContext.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SessionContext from "./hooks/SessionContext.js";
 import HashtagContext from "./hooks/HashtagContext.js";
 import Timeline from "./pages/Timeline/index.js";
 import SignUp from "./pages/SignUp/index.js";
@@ -7,21 +7,20 @@ import SignIn from "./pages/SignIn/index.js";
 import { useState } from "react";
 
 const App = () => {
-  const [session, setSession] = useState(null);
   const [hashtag, setHashtag] = useState(null);
   return (
-    <SessionContext.Provider value={{ session, setSession }}>
-      <HashtagContext.Provider value = {{hashtag, setHashtag}}>
+    <SessionContextProvider>
+      <HashtagContext.Provider value={{ hashtag, setHashtag }}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<SignIn {...{ setSession }} />} />
+            <Route path="/" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route exact path="/timeline" element={<Timeline />} />
             <Route exact path="/hashtag/:hashtagName" element={<Timeline />} />
           </Routes>
         </BrowserRouter>
       </HashtagContext.Provider>
-    </SessionContext.Provider>
+    </SessionContextProvider>
   );
 };
 
