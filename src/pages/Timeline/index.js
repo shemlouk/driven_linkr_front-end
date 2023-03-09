@@ -17,9 +17,7 @@ const Timeline = () => {
     const [postList, setPostList] = useState([])
 
     useEffect(() => {
-        console.log(1)
         const localSession = JSON.parse(localStorage.getItem("session"));
-        console.log(hashtagName);
         if (!localSession || !hashtagName) {
             setHashtag(null);
         }
@@ -38,7 +36,6 @@ const Timeline = () => {
         async function getPostsWithHashtag() {
             try {
                 const res = (await axios.get(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag.id}`, localSession.auth)).data;
-                console.log(res);
                 setPostList(res.slice(0, 20));
                 setIsLoading(false);
             } catch (error) {
