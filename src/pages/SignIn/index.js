@@ -83,7 +83,7 @@ const SignIn = () => {
           {isLoading ? <ButtonSpinner /> : "Sign In"}
         </F.Submit>
       </form>
-      <Link to="/signup" data-test="sign-up-link">
+      <Link to="/sign-up" data-test="sign-up-link">
         First time? Create an account!
       </Link>
     </SignPage>
