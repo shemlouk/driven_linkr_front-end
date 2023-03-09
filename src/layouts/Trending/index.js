@@ -1,46 +1,59 @@
 import { HashtagList, HashtagName, TrendingSection } from "./styled";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import HashtagContext from "../../hooks/HashtagContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Trending() {
-  const [trendingTags, setTrandingTags] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { session } = useContext(SessionContext);
+    const navigate = useNavigate();
+    const { setHashtag } = useContext(HashtagContext); 
+    const [isLoading, setIsLoading] = useState(true);
+    const [trendingTags, setTrendingTags] = useState(null);
+    
+    useEffect(() => {
+        const localSession = JSON.parse(localStorage.getItem("session"));
+        if (!localSession) {
+            alert("Can't access this page.");
+            navigate("/");
+            return;
+        }
 
-  useEffect(() => {
-    getTrending();
-  }, []);
+        async function getTrending() {
+            try {
+                const trending = (await axios.get(`${process.env.REACT_APP_API_URL}/trending`, localSession.auth)).data;
+                setTrendingTags(trending);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(`getTrending ${error}`);
+                alert("An error occurred while trying to fetch the trending hashtags, please refresh the page.");
+            }
+        }
 
-  async function getTrending() {
-    try {
-      const trending = (
-        await axios.get(
-          `${process.env.REACT_APP_API_URL}/trending`,
-          session.auth
-        )
-      ).data;
-      setTrandingTags(trending);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(`getTrending ${error}`);
+        getTrending();
+    }, []);
+
+    function selectHashtag(hashtag) {
+        setHashtag({
+            id: hashtag.id,
+            hashtag: hashtag.name,
+            quantity: hashtag.quantity
+        });
+        navigate(`/hashtag/${hashtag.name}`);
     }
   }
 
-  return (
-    <>
-      <TrendingSection>
-        <span>Trending</span>
-        <HashtagList>
-          {isLoading ? (
-            <HashtagName>Carregando...</HashtagName>
-          ) : (
-            trendingTags.map((tag) => {
-              return <HashtagName key={tag.id}># {tag.name}</HashtagName>;
-            })
-          )}
-        </HashtagList>
-      </TrendingSection>
-    </>
-  );
+    return (
+        <>
+            <TrendingSection>
+                <span>Trending</span>
+                <HashtagList>
+                {
+                    isLoading ? (<HashtagName>Carregando...</HashtagName>) : trendingTags.map((tag) => {
+                        return <HashtagName key={tag.id} onClick={() => selectHashtag(tag)} ># {tag.name}</HashtagName>
+                    })
+                }
+                </HashtagList>
+            </TrendingSection>
+        </>
+    );
 }
