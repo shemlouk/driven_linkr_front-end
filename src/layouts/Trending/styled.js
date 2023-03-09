@@ -7,6 +7,7 @@ export const TrendingSection = styled.section`
     align-items: flex-start;
     justify-content: center;
     width: 300px;
+    height: fit-content;
     max-height: 430px;
     background-color: #171717;
     margin-left: 18px;
