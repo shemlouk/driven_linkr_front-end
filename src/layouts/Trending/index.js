@@ -36,7 +36,7 @@ export default function Trending() {
     function selectHashtag(hashtag) {
         setHashtag({
             id: hashtag.id,
-            hashtag: hashtag.name,
+            name: hashtag.name,
             quantity: hashtag.quantity
         });
         navigate(`/hashtag/${hashtag.name}`);
