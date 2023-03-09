@@ -10,7 +10,7 @@ import axios from "axios";
 import Joi from "joi";
 
 const schema = Joi.object({
-  username: Joi.string().min(2).max(50),
+  name: Joi.string().min(2).max(50),
   email: Joi.string().email({ tlds: { allow: false } }),
   password: Joi.string().min(8).max(16),
   profilePicture: Joi.string().uri(),

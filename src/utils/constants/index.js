@@ -17,7 +17,7 @@ export const INPUTS = [
   },
   {
     form: ["signup"],
-    name: "username",
+    name: "name",
     type: "text",
     placeholder: "username",
     dataTest: "username",
