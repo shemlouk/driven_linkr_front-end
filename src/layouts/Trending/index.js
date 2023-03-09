@@ -1,30 +1,45 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import SessionContext from "../../hooks/SessionContext";
+import { useNavigate } from "react-router-dom";
+import HashtagContext from "../../hooks/HashtagContext";
 import { HashtagList, HashtagName, TrendingSection } from "./styled";
 
 
 export default function Trending() {
-    const { session } = useContext(SessionContext);
+    const navigate = useNavigate();
+    const { setHashtag } = useContext(HashtagContext); 
     const [isLoading, setIsLoading] = useState(true);
-    const [trendingTags, setTrandingTags] = useState(null);
-
+    const [trendingTags, setTrendingTags] = useState(null);
+    
     useEffect(() => {
-        console.log(session);
-        getTrending();
-        console.log(session);
-    });
-
-    async function getTrending() {
-        try {
-            const trending = (await axios.get(`${process.env.REACT_APP_API_URL}/trending`, session.auth)).data;
-            console.log(trending);
-            setTrandingTags(trending);
-            setIsLoading(false);
-        } catch (error) {
-            console.error(`getTrending ${error}`);
-            alert("An error occurred while trying to fetch the trending hashtags, please refresh the page.");
+        const localSession = JSON.parse(localStorage.getItem("session"));
+        if (!localSession) {
+            alert("Can't access this page.");
+            navigate("/");
+            return;
         }
+
+        async function getTrending() {
+            try {
+                const trending = (await axios.get(`${process.env.REACT_APP_API_URL}/trending`, localSession.auth)).data;
+                setTrendingTags(trending);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(`getTrending ${error}`);
+                alert("An error occurred while trying to fetch the trending hashtags, please refresh the page.");
+            }
+        }
+
+        getTrending();
+    }, []);
+
+    function selectHashtag(hashtag) {
+        setHashtag({
+            id: hashtag.id,
+            hashtag: hashtag.name,
+            quantity: hashtag.quantity
+        });
+        navigate(`/hashtag/${hashtag.name}`);
     }
 
     return (
@@ -34,7 +49,7 @@ export default function Trending() {
                 <HashtagList>
                 {
                     isLoading ? (<HashtagName>Carregando...</HashtagName>) : trendingTags.map((tag) => {
-                        return <HashtagName key={tag.id}># {tag.name}</HashtagName>
+                        return <HashtagName key={tag.id} onClick={() => selectHashtag(tag)} ># {tag.name}</HashtagName>
                     })
                 }
                 </HashtagList>
