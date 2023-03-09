@@ -1,5 +1,25 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
-const SessionContext = createContext();
+export const SessionContext = createContext({
+  session: null,
+  isLoggedIn: false,
+  updateSession: () => {},
+});
 
-export default SessionContext;
+export const SessionContextProvider = ({ children }) => {
+  const [session, setSession] = useState(() =>
+    JSON.parse(localStorage.getItem("session"))
+  );
+  const [isLoggedIn, setIsLoggedIn] = useState(session ? true : false);
+
+  const updateSession = (data) => {
+    setSession(data || null);
+    setIsLoggedIn(data ? true : false);
+  };
+
+  return (
+    <SessionContext.Provider value={{ session, updateSession, isLoggedIn }}>
+      {children}
+    </SessionContext.Provider>
+  );
+};

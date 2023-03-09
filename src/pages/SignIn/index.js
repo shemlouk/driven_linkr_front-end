@@ -1,8 +1,9 @@
 import concatErrorMessages from "../../utils/concatErrorMessages.js";
+import { Fragment, useCallback, useContext, useState } from "react";
 import { INPUTS, API_URL } from "../../utils/constants/index.js";
+import { SessionContext } from "../../hooks/SessionContext.js";
 import ButtonSpinner from "../../components/ButtonSpinner.js";
 import * as F from "../../components/formComponents.js";
-import { Fragment, useCallback, useState } from "react";
 import SignPage from "../../layouts/SignPage/index.js";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -18,7 +19,8 @@ const schema = Joi.object({
 
 const inputs = INPUTS.filter((input) => input.form.includes("signin"));
 
-const SignIn = ({ setSession }) => {
+const SignIn = () => {
+  const { updateSession } = useContext(SessionContext);
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ const SignIn = ({ setSession }) => {
       };
 
       localStorage.session = JSON.stringify(sessionData);
-      setSession(sessionData);
+      updateSession(sessionData);
 
       navigate("/timeline");
     } catch ({ response: { status } }) {
@@ -81,7 +83,7 @@ const SignIn = ({ setSession }) => {
           {isLoading ? <ButtonSpinner /> : "Sign In"}
         </F.Submit>
       </form>
-      <Link to="/signup" data-test="sign-up-link">
+      <Link to="/sign-up" data-test="sign-up-link">
         First time? Create an account!
       </Link>
     </SignPage>
