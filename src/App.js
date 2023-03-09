@@ -17,7 +17,7 @@ const App = () => {
             <Route path="/" element={<SignIn {...{ setSession }} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route exact path="/timeline" element={<Timeline />} />
-            <Route exact path="/hashtag/:hashtag" element={<Timeline />} />
+            <Route exact path="/hashtag/:hashtagName" element={<Timeline />} />
           </Routes>
         </BrowserRouter>
       </HashtagContext.Provider>

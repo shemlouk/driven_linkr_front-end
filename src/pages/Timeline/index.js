@@ -5,19 +5,26 @@ import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
-import { useParams } from "react-router-dom";
 import SessionContext from "../../hooks/SessionContext";
 import HashtagContext from "../../hooks/HashtagContext";
+import { useParams } from "react-router-dom";
 
 const Timeline = () => {
+    const { hashtagName } = useParams();
     const { session } = useContext(SessionContext);
-    const { hashtag } = useContext(HashtagContext);
+    const { hashtag, setHashtag } = useContext(HashtagContext);
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
 
     useEffect(() => {
+        console.log(1)
+        const localSession = JSON.parse(localStorage.getItem("session"));
+        console.log(hashtagName);
+        if (!localSession || !hashtagName) {
+            setHashtag(null);
+        }
+        
         async function getPosts() {
-            console.log(1)
             try {
                 const res = await axios.get("https://jsonplaceholder.typicode.com/posts")
                 setPostList(res.data.slice(0, 20))
@@ -30,8 +37,7 @@ const Timeline = () => {
         }
         async function getPostsWithHashtag() {
             try {
-                console.log(2)
-                const res = (await axios.get(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag.id}`, session.auth)).data;
+                const res = (await axios.get(`${process.env.REACT_APP_API_URL}/hashtag/${hashtag.id}`, localSession.auth)).data;
                 console.log(res);
                 setPostList(res.slice(0, 20));
                 setIsLoading(false);
@@ -41,20 +47,20 @@ const Timeline = () => {
             }
         }
 
-        hashtag ? getPostsWithHashtag() : getPosts();
+        hashtagName ? getPostsWithHashtag() : getPosts();
         
-    }, [hashtag])
+    }, [hashtagName])
 
     return (
         <>
             <Header />
             <P.PageContainer>
                 <P.TitleBox>
-                    { hashtag? (`# ${hashtag.hashtag}`) : ("timeline")}
+                    { hashtagName? (`# ${hashtag.hashtag}`) : ("timeline")}
                 </P.TitleBox>
                 <P.ContentWrapper>
                     <P.PostWrapper>
-                        { hashtag? (null) : (<WritePost />)}
+                        { hashtagName? (null) : (<WritePost />)}
                         <P.PostListing>
                             {isLoading ? (
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>
