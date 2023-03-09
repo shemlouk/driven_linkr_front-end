@@ -73,7 +73,7 @@ export default function Hashtag() {
                                         </P.LeftSide>
                                         <P.RightSide>
                                             <P.PostUser>
-                                                <p>{post.username}</p>
+                                                <p>{post.name}</p>
                                                 <div>
                                                     <span><IoPencilSharp /></span>
                                                     <span><IoTrashOutline /></span>
