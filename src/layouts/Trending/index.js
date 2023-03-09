@@ -2,21 +2,26 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HashtagContext from "../../hooks/HashtagContext";
-import SessionContext from "../../hooks/SessionContext";
 import { HashtagList, HashtagName, TrendingSection } from "./styled";
 
 
 export default function Trending() {
     const navigate = useNavigate();
-    const { session } = useContext(SessionContext);
     const { setHashtag } = useContext(HashtagContext); 
     const [isLoading, setIsLoading] = useState(true);
     const [trendingTags, setTrendingTags] = useState(null);
     
     useEffect(() => {
+        const localSession = JSON.parse(localStorage.getItem("session"));
+        if (!localSession) {
+            alert("Can't access this page.");
+            navigate("/");
+            return;
+        }
+
         async function getTrending() {
             try {
-                const trending = (await axios.get(`${process.env.REACT_APP_API_URL}/trending`, session.auth)).data;
+                const trending = (await axios.get(`${process.env.REACT_APP_API_URL}/trending`, localSession.auth)).data;
                 setTrendingTags(trending);
                 setIsLoading(false);
             } catch (error) {
@@ -26,7 +31,7 @@ export default function Trending() {
         }
 
         getTrending();
-    }, [session]);
+    }, []);
 
     function selectHashtag(hashtag) {
         setHashtag({
