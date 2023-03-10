@@ -13,45 +13,45 @@ import axios from "axios";
 import { PublishContext } from "../../hooks/PublishContext";
 
 const customStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    zIndex: 5,
-    display: "flex",
-  },
-  content: {
-    display: "flex",
-    width: "600px",
-    height: "262px",
-    backgroundColor: "#333333",
-    borderRadius: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
-  },
+    overlay: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100%",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        zIndex: 5,
+        display: "flex",
+    },
+    content: {
+        display: "flex",
+        width: "600px",
+        height: "262px",
+        backgroundColor: "#333333",
+        borderRadius: "50px",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "auto",
+    },
 };
 
 ReactModal.setAppElement("#root");
 
 const Timeline = () => {
-  const navigate = useNavigate();
-  const { session } = useContext(SessionContext);
-  const { setHashtag } = useContext(HashtagContext);
-  const { updateList, setUpdateList } = useContext(PublishContext)
-  const [isLoading, setIsLoading] = useState(true)
-  const [postList, setPostList] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [deletePostId, setDeletePostId] = useState()
+    const navigate = useNavigate();
+    const { session } = useContext(SessionContext);
+    const { setHashtag } = useContext(HashtagContext);
+    const { updateList, setUpdateList } = useContext(PublishContext)
+    const [isLoading, setIsLoading] = useState(true)
+    const [postList, setPostList] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [deletePostId, setDeletePostId] = useState()
 
-  useEffect(() => {
+    useEffect(() => {
         getPosts()
     }, [updateList])
 
-  async function getPosts() {
+    async function getPosts() {
         try {
             let res
             if (!session) {
@@ -68,11 +68,11 @@ const Timeline = () => {
             alert("An error occurred while trying to fetch the posts, please refresh the page.")
         }
     }
-    
 
-    
 
-    
+
+
+
 
     async function selectHashtag(hashtag) {
         hashtag = hashtag.replace("#", "");
@@ -88,23 +88,24 @@ const Timeline = () => {
         }
     }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
+    function closeModal() {
+        setIsModalOpen(false);
+    }
 
-  function openModal(id) {
-    setIsModalOpen(true);
-    setDeletePostId(id);
-  }
+    function openModal(id) {
+        setIsModalOpen(true);
+        setDeletePostId(id);
+    }
 
-  async function deletePost(id) {
-    try {
-      await axios.delete(`${API_URL}/user/post/${id}`, session.auth);
-      const newPostList = postList.filter((post) => post.id !== id);
-      setPostList(newPostList);
-      setIsModalOpen(false);
-    } catch (response) {
-      console.error(response);
+    async function deletePost(id) {
+        try {
+            await axios.delete(`${API_URL}/user/post/${id}`, session.auth);
+            const newPostList = postList.filter((post) => post.id !== id);
+            setPostList(newPostList);
+            setIsModalOpen(false);
+        } catch (response) {
+            console.error(response);
+        }
     }
 
     return (
@@ -116,15 +117,15 @@ const Timeline = () => {
                 </P.TitleBox>
                 <P.ContentWrapper>
                     <P.PostWrapper>
-                        {session ? <WritePost getPosts={getPosts}  /> : null}
+                        {session ? <WritePost getPosts={getPosts} /> : null}
                         <P.PostListing>
                             {isLoading ? (
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>
                             ) : postList.length > 0 ? (
                                 postList.map((post) => (
-                                   <PostCard
-                                      key={post.id}
-                                      {...{ ...post, openModal, selectHashtag }}
+                                    <PostCard
+                                        key={post.id}
+                                        {...{ ...post, openModal, selectHashtag }}
                                     />
                                 ))
                             ) : (
@@ -140,13 +141,17 @@ const Timeline = () => {
                 onRequestClose={closeModal}
                 style={customStyles}
             >
-              Yes, delete it
-            </button>
-          </div>
-        </P.OverlayBox>
-      </ReactModal>
-    </>
-  );
+                <P.OverlayBox>
+                    <p>Are you sure you want to delete this post?</p>
+                    <div>
+                        <button className="no-btn" onClick={closeModal}>No, go back</button>
+                        <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
+
+                    </div>
+                </P.OverlayBox>
+            </ReactModal>
+        </>
+    );
 };
 
 export default Timeline;
