@@ -22,6 +22,7 @@ export const Container = styled.div`
 
     svg {
       width: 22px;
+      color: ${({ isLiked }) => isLiked && "#AC0000"};
     }
 
     p {
