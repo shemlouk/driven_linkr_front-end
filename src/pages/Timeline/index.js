@@ -11,6 +11,7 @@ import ReactModal from "react-modal";
 import * as P from "./styles";
 import axios from "axios";
 import { PublishContext } from "../../hooks/PublishContext";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const customStyles = {
     overlay: {
@@ -46,6 +47,7 @@ const Timeline = () => {
     const [postList, setPostList] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [deletePostId, setDeletePostId] = useState()
+    const [isDeleting, setIsDeleting] = useState(false)
 
     useEffect(() => {
         getPosts()
@@ -98,58 +100,66 @@ const Timeline = () => {
     }
 
     async function deletePost(id) {
+        setIsDeleting(true)
         try {
             await axios.delete(`${API_URL}/user/post/${id}`, session.auth);
             const newPostList = postList.filter((post) => post.id !== id);
             setPostList(newPostList);
-            setIsModalOpen(false);
         } catch (response) {
             console.error(response);
         }
+        setIsDeleting(false)
+        setIsModalOpen(false)
     }
 
     return (
         <>
-            <Header />
-            <P.PageContainer>
-                <P.TitleBox>
-                    timeline
-                </P.TitleBox>
-                <P.ContentWrapper>
-                    <P.PostWrapper>
-                        {session ? <WritePost getPosts={getPosts} /> : null}
-                        <P.PostListing>
-                            {isLoading ? (
-                                <P.SpecialMessage>Loading...</P.SpecialMessage>
-                            ) : postList.length > 0 ? (
-                                postList.map((post) => (
-                                    <PostCard
-                                        key={post.id}
-                                        {...{ ...post, openModal, selectHashtag }}
-                                    />
-                                ))
-                            ) : (
-                                <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
-                            )}
-                        </P.PostListing>
-                    </P.PostWrapper>
-                    {session ? <Trending /> : null}
-                </P.ContentWrapper>
-            </P.PageContainer>
-            <ReactModal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                style={customStyles}
-            >
-                <P.OverlayBox>
-                    <p>Are you sure you want to delete this post?</p>
-                    <div>
-                        <button className="no-btn" onClick={closeModal}>No, go back</button>
-                        <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
+            {isDeleting ? (
+                <LoadingSpinner />
+            ) : (
+                <>
+                    <Header />
+                    <P.PageContainer>
+                        <P.TitleBox>
+                            timeline
+                        </P.TitleBox>
+                        <P.ContentWrapper>
+                            <P.PostWrapper>
+                                {session ? <WritePost getPosts={getPosts} /> : null}
+                                <P.PostListing>
+                                    {isLoading ? (
+                                        <P.SpecialMessage>Loading...</P.SpecialMessage>
+                                    ) : postList.length > 0 ? (
+                                        postList.map((post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                {...{ ...post, openModal, selectHashtag }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
+                                    )}
+                                </P.PostListing>
+                            </P.PostWrapper>
+                            {session ? <Trending /> : null}
+                        </P.ContentWrapper>
+                    </P.PageContainer>
+                    <ReactModal
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        style={customStyles}
+                    >
+                        <P.OverlayBox>
+                            <p>Are you sure you want to delete this post?</p>
+                            <div>
+                                <button className="no-btn" onClick={closeModal}>No, go back</button>
+                                <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
 
-                    </div>
-                </P.OverlayBox>
-            </ReactModal>
+                            </div>
+                        </P.OverlayBox>
+                    </ReactModal>
+                </>
+            )}
         </>
     );
 };
