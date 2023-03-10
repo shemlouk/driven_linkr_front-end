@@ -5,9 +5,7 @@ import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
-import {SessionContext} from "../../hooks/SessionContext";
-import HashtagContext from "../../hooks/HashtagContext";
-import { useParams } from "react-router-dom";
+import { SessionContext } from "../../hooks/SessionContext";
 
 const Timeline = () => {
     const { session } = useContext(SessionContext);
@@ -28,7 +26,7 @@ const Timeline = () => {
         }
 
         getPosts();
-        
+
     }, [])
 
     return (
@@ -48,7 +46,7 @@ const Timeline = () => {
                                 postList.map((post) => (
                                     <P.PostBox key={post.id}>
                                         <P.LeftSide>
-                                            <img src="https://www.w3schools.com/howto/img_avatar.png" />
+                                            <img src={post.profilePicture} />
                                             <div>
                                                 <IoHeartOutline />
                                                 <p>13 likes</p>
@@ -56,21 +54,23 @@ const Timeline = () => {
                                         </P.LeftSide>
                                         <P.RightSide>
                                             <P.PostUser>
-                                                <p>{post.userId}</p>
+                                                <Link to={`/user/${post.user_id}`}>
+                                                    <p>{post.name}</p>
+                                                </Link>
                                                 <div>
                                                     <span><IoPencilSharp /></span>
                                                     <span><IoTrashOutline /></span>
                                                 </div>
                                             </P.PostUser>
                                             <P.PostContent>
-                                                <p>{post.title}</p>
+                                                <p>{post.description}</p>
                                                 <P.LinkPreview>
                                                     <div>
-                                                        <span>All Hope Is Gone (Audio)</span>
-                                                        <p>Slipknot's official audio stream for 'All Hope Is Gone' from the album, All Hope Is Gone - available now on Roadrunner Records. Download it at https://slipkn...</p>
-                                                        <p>https://www.youtube.com/watch?v=Wn2w3j_xmbw&ab_channel=Slipknot</p>
+                                                        <span>{post.preview_title}</span>
+                                                        <p>{post.preview_desc}</p>
+                                                        <p>{post.url}</p>
                                                     </div>
-                                                    <img src="https://i.ytimg.com/vi/Wn2w3j_xmbw/maxresdefault.jpg" />
+                                                    <img src={post.preview_img} alt="preview_img" />
                                                 </P.LinkPreview>
                                             </P.PostContent>
                                         </P.RightSide>
@@ -81,7 +81,7 @@ const Timeline = () => {
                             )}
                         </P.PostListing>
                     </P.PostWrapper>
-                    { session ? <Trending/> : null}
+                    {session ? <Trending /> : null}
                 </P.ContentWrapper>
             </P.PageContainer>
         </>
