@@ -13,20 +13,19 @@ const Timeline = () => {
     const [postList, setPostList] = useState([])
 
     useEffect(() => {
-        async function getPosts() {
-            try {
-                const res = await axios.get("https://jsonplaceholder.typicode.com/posts")
-                setPostList(res.data.slice(0, 20))
-                setIsLoading(false)
 
+        async function getPosts() {
+
+            try {
+                const res = await axios.get(`${API_URL}/timeline`)
+                setPostList(res.data)
+                setIsLoading(false)
             } catch ({ response }) {
                 console.error(response)
                 alert("An error occurred while trying to fetch the posts, please refresh the page.")
             }
         }
-
-        getPosts();
-
+        getPosts()
     }, [])
 
     return (
