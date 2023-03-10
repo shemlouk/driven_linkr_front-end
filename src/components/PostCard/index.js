@@ -6,7 +6,7 @@ import * as S from "./styles.js";
 const PostCard = (props) => {
   return (
     <PostContext.Provider value={props}>
-      <S.Container>
+      <S.Container data-test="post">
         <LeftSide />
         <RightSide />
       </S.Container>

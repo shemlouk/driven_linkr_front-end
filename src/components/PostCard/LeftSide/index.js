@@ -1,14 +1,35 @@
+import { SessionContext } from "../../../hooks/SessionContext.js";
+import { API_URL } from "../../../utils/constants/index.js";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import PostContext from "../../../hooks/PostContext.js";
-import { IoHeartOutline } from "react-icons/io5";
-import { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { Tooltip } from 'react-tooltip';
 import * as S from "./styles.js";
-import { SessionContext } from "../../../hooks/SessionContext.js";
 
 const LeftSide = () => {
-  const { profilePicture, profile_picture, likes_count, likes_names } = useContext(PostContext);
+  const { profilePicture, profile_picture, likes_count, likes_names, id } = useContext(PostContext);
   const { session } = useContext(SessionContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [tooltipText, setTooltipText] = useState("");
+   const [isLiked, setIsLiked] = useState(false);
+
+
+const LeftSide = () => {
+  
+
+  const updateLike = useCallback(async () => {
+    if (isLoading) return;
+    setIsLiked(!isLiked);
+    setIsLoading(true);
+    try {
+      await axios.post(`${API_URL}/timeline/${id}/like`, {}, session.auth);
+      setIsLoading(false);
+    } catch ({ response }) {
+      console.error(response);
+    }
+  }, [isLiked, isLoading]);
+
 
   useEffect(() => {
     createTooltipText();
@@ -36,16 +57,26 @@ const LeftSide = () => {
 
   }
 
+
   return (
-    <S.Container>
+    <S.Container {...{ isLiked }}>
       <img src={profilePicture || profile_picture} />
       <div>
-        <IoHeartOutline 
+        {isLiked ? (
+          <IoHeart 
           data-tooltip-id="who-liked" 
           data-tooltip-content={tooltipText} 
           data-tooltip-place="bottom"
           data-test="like-btn"
-        />
+          onClick={updateLike} />
+        ) : (
+          <IoHeartOutline 
+          data-tooltip-id="who-liked" 
+          data-tooltip-content={tooltipText} 
+          data-tooltip-place="bottom"
+          data-test="like-btn"
+          onClick={updateLike} />
+        )}
         <Tooltip id="who-liked" 
           style={{
             fontFamily: "Lato, sans-serif",
@@ -58,7 +89,7 @@ const LeftSide = () => {
           className="example"
           classNameArrow="arrow"
         />
-        <p>{`${likes_count || 0} likes`}</p>
+        <p>{isLiked ? (likes_count ?? 0) + 1 : likes_count} likes</p>
       </div>
     </S.Container>
   );
