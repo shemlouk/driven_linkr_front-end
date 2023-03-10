@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp/index.js";
 import SignIn from "./pages/SignIn/index.js";
 import { useState } from "react";
 import Hashtag from "./pages/Hashtag/index.js";
+import UserPage from "./pages/UserPage/index.js";
 
 const App = () => {
   const [hashtag, setHashtag] = useState(null);
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/sign-up" element={<SignUp />} />
             <Route exact path="/timeline" element={<Timeline />} />
             <Route exact path="/hashtag/:hashtagName" element={<Hashtag />} />
+            <Route path="/user/:id?" element={<UserPage />} />
           </Routes>
         </BrowserRouter>
       </HashtagContext.Provider>

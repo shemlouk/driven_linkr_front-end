@@ -1,38 +1,39 @@
 import Header from "../../layouts/Header/index";
 import React, { useState, useEffect, useContext } from "react";
-import * as P from "./styles";
+import * as P from "../Timeline/styles";
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
 import { API_URL } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
-const Timeline = () => {
-    const { session } = useContext(SessionContext);
+const UserPage = () => {
+    const { id } = useParams()
+    const navigate = useNavigate()
+    const localSession = JSON.parse(localStorage.getItem("session"));
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
+    const [username, setUsername] = useState("")
 
     useEffect(() => {
+        if (!localSession) {
+            return navigate("/timeline");
+        }
 
-        async function getPosts() {
+        async function getUserPosts() {
 
             try {
-                let res
-                if (!session) {
-                    res = await axios.get(`${API_URL}/timeline`)
-                } else {
-                    res = await axios.get(`${API_URL}/timeline`, session.auth)
-                }
+                const res = await axios.get(`${API_URL}/user/${id}`, localSession.auth)
                 setPostList(res.data)
+                setUsername(res.data.name)
                 setIsLoading(false)
             } catch ({ response }) {
                 console.error(response)
                 alert("An error occurred while trying to fetch the posts, please refresh the page.")
             }
         }
-        getPosts()
+        getUserPosts()
     }, [])
 
     return (
@@ -40,11 +41,10 @@ const Timeline = () => {
             <Header />
             <P.PageContainer>
                 <P.TitleBox>
-                    timeline
+                    {`${username}`}'s posts
                 </P.TitleBox>
                 <P.ContentWrapper>
                     <P.PostWrapper>
-                        {session ? <WritePost /> : null}
                         <P.PostListing>
                             {isLoading ? (
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>
@@ -87,7 +87,7 @@ const Timeline = () => {
                             )}
                         </P.PostListing>
                     </P.PostWrapper>
-                    {session ? <Trending /> : null}
+                    <Trending />
                 </P.ContentWrapper>
             </P.PageContainer>
         </>
@@ -95,4 +95,4 @@ const Timeline = () => {
     )
 }
 
-export default Timeline
+export default UserPage

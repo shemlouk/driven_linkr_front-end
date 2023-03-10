@@ -125,6 +125,7 @@ export const LinkPreview = styled.div`
     border-radius: 12px;
     border: 1px solid #4D4D4D;
     margin-top: 12px;
+    justify-content: space-between;
 
     div {
         display: flex;
