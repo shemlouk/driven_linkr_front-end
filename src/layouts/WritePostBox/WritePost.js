@@ -6,7 +6,7 @@ import axios from "axios"
 import { SessionContext } from "../../hooks/SessionContext";
 
 
-const WritePost = () => {
+const WritePost = ({getPosts}) => {
     const HASHTAG_REGEX = /(?:^|\s)#(\w+)/g;
 
     const navigate = useNavigate()
@@ -16,7 +16,7 @@ const WritePost = () => {
         url: "",
         description: ""
     })
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
 
@@ -39,6 +39,7 @@ const WritePost = () => {
                 url: "",
                 description: ""
             })
+            getPosts();
             navigate("/timeline")
 
         } catch (error) {
