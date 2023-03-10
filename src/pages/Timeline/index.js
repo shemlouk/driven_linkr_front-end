@@ -11,150 +11,162 @@ import Trending from "../../layouts/Trending";
 import ReactModal from "react-modal";
 import * as P from "./styles";
 import axios from "axios";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const customStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    zIndex: 5,
-    display: "flex",
-  },
-  content: {
-    display: "flex",
-    width: "600px",
-    height: "262px",
-    backgroundColor: "#333333",
-    borderRadius: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
-  },
+    overlay: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100%",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        zIndex: 5,
+        display: "flex",
+    },
+    content: {
+        display: "flex",
+        width: "600px",
+        height: "262px",
+        backgroundColor: "#333333",
+        borderRadius: "50px",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "auto",
+    },
 };
 
 ReactModal.setAppElement("#root");
 
 const Timeline = () => {
-  const navigate = useNavigate();
-  const { session } = useContext(SessionContext);
-  const { setHashtag } = useContext(HashtagContext);
-  const { updateList, setUpdateList } = useContext(PublishContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [postList, setPostList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deletePostId, setDeletePostId] = useState();
+    const navigate = useNavigate();
+    const { session } = useContext(SessionContext);
+    const { setHashtag } = useContext(HashtagContext);
+    const { updateList, setUpdateList } = useContext(PublishContext)
+    const [isLoading, setIsLoading] = useState(true)
+    const [postList, setPostList] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [deletePostId, setDeletePostId] = useState()
+    const [isDeleting, setIsDeleting] = useState(false)
 
-  useEffect(() => {
-    getPosts();
-  }, [updateList]);
+    useEffect(() => {
+        getPosts();
+    }, [updateList]);
 
-  async function getPosts() {
-    try {
-      let res;
-      if (!session) {
-        res = await axios.get(`${API_URL}/timeline`);
-      } else {
-        res = await axios.get(`${API_URL}/timeline`, session.auth);
-      }
-      console.log(res.data);
-      setPostList(res.data);
-      setUpdateList(false);
-      setIsLoading(false);
-    } catch ({ response }) {
-      console.error(response);
-      alert(
-        "An error occurred while trying to fetch the posts, please refresh the page."
-      );
+    async function getPosts() {
+        try {
+            let res;
+            if (!session) {
+                res = await axios.get(`${API_URL}/timeline`);
+            } else {
+                res = await axios.get(`${API_URL}/timeline`, session.auth);
+            }
+            console.log(res.data);
+            setPostList(res.data);
+            setUpdateList(false);
+            setIsLoading(false);
+        } catch ({ response }) {
+            console.error(response);
+            alert(
+                "An error occurred while trying to fetch the posts, please refresh the page."
+            );
+        }
     }
-  }
 
-  async function selectHashtag(hashtag) {
-    hashtag = hashtag.replace("#", "");
+    async function selectHashtag(hashtag) {
+        hashtag = hashtag.replace("#", "");
 
-    try {
-      const res = (
-        await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)
-      ).data;
-      setHashtag({
-        ...res,
-      });
-      navigate(`/hashtag/${hashtag}`);
-    } catch (error) {
-      console.error(`selectHashtag: ${error}`);
+        try {
+            const res = (
+                await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)
+            ).data;
+            setHashtag({
+                ...res,
+            });
+            navigate(`/hashtag/${hashtag}`);
+        } catch (error) {
+            console.error(`selectHashtag: ${error}`);
+        }
     }
-  }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
-
-  function openModal(id) {
-    setIsModalOpen(true);
-    setDeletePostId(id);
-  }
-
-  async function deletePost(id) {
-    try {
-      await axios.delete(`${API_URL}/user/post/${id}`, session.auth);
-      const newPostList = postList.filter((post) => post.id !== id);
-      setPostList(newPostList);
-      setIsModalOpen(false);
-    } catch (response) {
-      console.error(response);
+    function closeModal() {
+        setIsModalOpen(false);
     }
-  }
 
-  return (
-    <>
-      <Header />
-      <P.PageContainer>
-        <P.TitleBox>timeline</P.TitleBox>
-        <P.ContentWrapper>
-          <P.PostWrapper>
-            {session ? <WritePost getPosts={getPosts} /> : null}
-            <P.PostListing>
-              {isLoading ? (
-                <P.SpecialMessage>Loading...</P.SpecialMessage>
-              ) : postList.length > 0 ? (
-                postList.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    {...{ ...post, openModal, selectHashtag }}
-                  />
-                ))
-              ) : (
-                <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
-              )}
-            </P.PostListing>
-          </P.PostWrapper>
-          {session ? <Trending /> : null}
-        </P.ContentWrapper>
-      </P.PageContainer>
-      <ReactModal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <P.OverlayBox>
-          <p>Are you sure you want to delete this post?</p>
-          <div>
-            <button className="no-btn" onClick={closeModal}>
-              No, go back
-            </button>
-            <button
-              className="yes-btn"
-              onClick={() => deletePost(deletePostId)}
-            >
-              Yes, delete it
-            </button>
-          </div>
-        </P.OverlayBox>
-      </ReactModal>
-    </>
-  );
+    function openModal(id) {
+        setIsModalOpen(true);
+        setDeletePostId(id);
+    }
+
+    async function deletePost(id) {
+        setIsDeleting(true)
+        try {
+            await axios.delete(`${API_URL}/user/post/${id}`, session.auth);
+            const newPostList = postList.filter((post) => post.id !== id);
+            setPostList(newPostList);
+        } catch (response) {
+            console.error(response);
+            alert("An error occurred while trying to delete your post")
+        }
+        setIsDeleting(false)
+        setIsModalOpen(false)
+    }
+
+    return (
+        <>
+            {isDeleting ? (
+                <LoadingSpinner />
+            ) : (
+                <>
+                    <Header />
+                    <P.PageContainer>
+                        <P.TitleBox>timeline</P.TitleBox>
+                        <P.ContentWrapper>
+                            <P.PostWrapper>
+                                {session ? <WritePost getPosts={getPosts} /> : null}
+                                <P.PostListing>
+                                    {isLoading ? (
+                                        <P.SpecialMessage>Loading...</P.SpecialMessage>
+                                    ) : postList.length > 0 ? (
+                                        postList.map((post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                {...{ ...post, openModal, selectHashtag }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
+                                    )}
+                                </P.PostListing>
+                            </P.PostWrapper>
+                            {session ? <Trending /> : null}
+                        </P.ContentWrapper>
+                    </P.PageContainer>
+                    <ReactModal
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        style={customStyles}
+                    >
+                        <P.OverlayBox>
+                            <p>Are you sure you want to delete this post?</p>
+                            <div>
+                                <button className="no-btn" onClick={closeModal}>
+                                    No, go back
+                                </button>
+                                <button
+                                    className="yes-btn"
+                                    onClick={() => deletePost(deletePostId)}
+                                >
+                                    Yes, delete it
+                                </button>
+                            </div>
+                        </P.OverlayBox>
+                    </ReactModal>
+                </>
+            )};
+        </>
+
+    );
 };
 
 export default Timeline;
