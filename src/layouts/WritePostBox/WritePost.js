@@ -1,14 +1,16 @@
 import * as W from "./styles"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { SessionContext } from "../../hooks/SessionContext";
 
 
 const WritePost = () => {
+    const HASHTAG_REGEX = /(?:^|\s)#(\w+)/g;
 
     const navigate = useNavigate()
-
+    const { session } = useContext(SessionContext);
     const [isLoading, setIsLoading] = useState(false)
     const [post, setPost] = useState({
         url: "",
@@ -22,6 +24,7 @@ const WritePost = () => {
         setIsLoading(true)
         try {
             await axios.post(`${API_URL}/timeline`, post)
+
             setIsLoading(false)
             setPost({
                 url: "",
@@ -33,6 +36,22 @@ const WritePost = () => {
             console.log(error)
             alert("There was an error publishing your link")
             setIsLoading(false)
+        }
+    }
+
+    const saveHashtags = async () => {
+        try {
+            const hashtags = post.description.match(HASHTAG_REGEX).map(tag => tag.replace("#", "").trim());
+            const hashtagIds = [];
+            for (const tag of hashtags) {
+                const id = (await axios.post(`${API_URL}/hashtag`, {name: tag}, session.auth)).data.id;
+                hashtagIds.push(id);
+            }
+            console.log(hashtagIds);
+            return hashtagIds;
+        } catch (error) {
+            console.log(`saveHashtags: ${error}`);
+            setIsLoading(false);
         }
     }
     return (
