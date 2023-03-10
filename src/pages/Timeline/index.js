@@ -2,7 +2,7 @@ import Header from "../../layouts/Header/index";
 import React, { useState, useEffect, useContext } from "react";
 import * as P from "./styles";
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-import WritePost from "../../layouts/WritePostBox/WritePost";
+import WritePost from "../../layouts/WritePostBox/index";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
@@ -48,26 +48,25 @@ const Timeline = () => {
     const [deletePostId, setDeletePostId] = useState()
 
     useEffect(() => {
-
-        async function getPosts() {
-
-            try {
-                let res
-                if (!session) {
-                    res = await axios.get(`${API_URL}/timeline`)
-                } else {
-                    res = await axios.get(`${API_URL}/timeline`, session.auth)
-                }
-                setPostList(res.data)
-                console.log(session.user)
-                setIsLoading(false)
-            } catch ({ response }) {
-                console.error(response)
-                alert("An error occurred while trying to fetch the posts, please refresh the page.")
-            }
-        }
         getPosts()
     }, [])
+
+    async function getPosts() {
+        try {
+            let res
+            if (!session) {
+                res = await axios.get(`${API_URL}/timeline`)
+            } else {
+                res = await axios.get(`${API_URL}/timeline`, session.auth)
+            }
+            console.log(res.data);
+            setPostList(res.data)
+            setIsLoading(false)
+        } catch ({ response }) {
+            console.error(response)
+            alert("An error occurred while trying to fetch the posts, please refresh the page.")
+        }
+    }
 
     async function selectHashtag(hashtag) {
         hashtag = hashtag.replace("#", "");
@@ -113,7 +112,7 @@ const Timeline = () => {
                 </P.TitleBox>
                 <P.ContentWrapper>
                     <P.PostWrapper>
-                        {session ? <WritePost /> : null}
+                        {session ? <WritePost getPosts={getPosts}  /> : null}
                         <P.PostListing>
                             {isLoading ? (
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>

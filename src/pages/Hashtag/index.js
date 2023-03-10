@@ -53,7 +53,7 @@ export default function Hashtag() {
             <Header />
 
             <P.PageContainer>
-                <P.TitleBox>
+                <P.TitleBox data-test="hashtag-title">
                     {`# ${hashtag?.name}`}
                 </P.TitleBox>
                 <P.ContentWrapper>
@@ -63,7 +63,7 @@ export default function Hashtag() {
                                 <P.SpecialMessage>Loading...</P.SpecialMessage>
                             ) : postList.length > 0 ? (
                                 postList.map((post) => (
-                                    <P.PostBox key={post.id}>
+                                    <P.PostBox key={post.id} data-test="post">
                                         <P.LeftSide>
                                             <P.ImageCover src={post.profile_picture} alt={`Foto de perfil do usuário ${post.username}`}/>
                                             <div>
