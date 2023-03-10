@@ -24,16 +24,15 @@ const WritePost = () => {
         try {
 
             const sentHashtags = await saveHashtags()
-
+            
             const res = await axios.post(`${API_URL}/timeline`, post, session.auth)
-            const postId = res.data.id
-            console.log(res.data.id)
-            console.log(sentHashtags)
-
-            const postHashtags = sentHashtags.map(hashtagId => ({ postId, hashtagId }))
-            console.log(postHashtags)
-
-            await axios.post(`${API_URL}/..........`, postHashtags, session.auth)
+            const post_id = res.data.id
+            
+            const postHashtags = sentHashtags.map(hashtag_id => ({ post_id, hashtag_id }))
+            
+            for (const postTag of postHashtags) {
+                await axios.post(`${API_URL}/posts/hashtag`, postTag, session.auth);
+            }
 
             setIsLoading(false)
             setPost({
@@ -57,11 +56,9 @@ const WritePost = () => {
                 const id = (await axios.post(`${API_URL}/hashtag`, { name: tag }, session.auth)).data.id;
                 hashtagIds.push(id);
             }
-            console.log(hashtagIds);
             return hashtagIds;
         } catch (error) {
             console.log(`saveHashtags: ${error}`);
-            setIsLoading(false);
         }
     }
     return (
