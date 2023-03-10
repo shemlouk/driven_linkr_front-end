@@ -1,5 +1,5 @@
 import * as W from "./styles"
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -17,13 +17,23 @@ const WritePost = () => {
         description: ""
     })
 
-
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         setIsLoading(true)
         try {
-            await axios.post(`${API_URL}/timeline`, post)
+
+            const sentHashtags = await saveHashtags()
+
+            const res = await axios.post(`${API_URL}/timeline`, post, session.auth)
+            const postId = res.data.id
+            console.log(res.data.id)
+            console.log(sentHashtags)
+
+            const postHashtags = sentHashtags.map(hashtagId => ({ postId, hashtagId }))
+            console.log(postHashtags)
+
+            await axios.post(`${API_URL}/..........`, postHashtags, session.auth)
 
             setIsLoading(false)
             setPost({
@@ -44,7 +54,7 @@ const WritePost = () => {
             const hashtags = post.description.match(HASHTAG_REGEX).map(tag => tag.replace("#", "").trim());
             const hashtagIds = [];
             for (const tag of hashtags) {
-                const id = (await axios.post(`${API_URL}/hashtag`, {name: tag}, session.auth)).data.id;
+                const id = (await axios.post(`${API_URL}/hashtag`, { name: tag }, session.auth)).data.id;
                 hashtagIds.push(id);
             }
             console.log(hashtagIds);
@@ -58,7 +68,7 @@ const WritePost = () => {
         <>
             <W.WritePostBox>
                 <W.LoggedUser>
-                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="avatar" />
+                    <img src={session.user.profilePicture} alt="avatar" />
                 </W.LoggedUser>
                 <W.PublishForm onSubmit={handleSubmit}>
                     <p>What are you going to share today?</p>
