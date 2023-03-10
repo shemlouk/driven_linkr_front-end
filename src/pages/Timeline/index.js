@@ -45,6 +45,7 @@ const Timeline = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [deletePostId, setDeletePostId] = useState()
 
     useEffect(() => {
 
@@ -86,8 +87,21 @@ const Timeline = () => {
         setIsModalOpen(false)
     }
 
-    function openModal() {
+    function openModal(id) {
         setIsModalOpen(true)
+        setDeletePostId(id)
+    }
+
+    async function deletePost(id) {
+
+        try {
+            await axios.delete(`${API_URL}/user/post/${id}`, session.auth)
+            const newPostList = postList.filter((post) => post.id !== id)
+            setPostList(newPostList)
+            setIsModalOpen(false)
+        } catch (response) {
+            console.error(response)
+        }
     }
 
     return (
@@ -121,7 +135,7 @@ const Timeline = () => {
                                                 {session ? (
                                                     <div>
                                                         <span><IoPencilSharp /></span>
-                                                        <span onClick={openModal}><IoTrashOutline /></span>
+                                                        <span onClick={() => openModal(post.id)}><IoTrashOutline /></span>
                                                     </div>
                                                 ) : null
                                                 }
@@ -159,7 +173,7 @@ const Timeline = () => {
                     <p>Are you sure you want to delete this post?</p>
                     <div>
                         <button className="no-btn" onClick={closeModal}>No, go back</button>
-                        <button className="yes-btn" onClick={closeModal}>Yes, delete it</button>
+                        <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
                         
                     </div>
                 </P.OverlayBox>
