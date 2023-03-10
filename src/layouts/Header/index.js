@@ -1,9 +1,10 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import profilePicture from "../../assets/defaultProfilePicture.webp";
-import { IoSearchSharp, IoChevronDownSharp } from "react-icons/io5";
 import LoadingSpinner from "../../components/LoadingSpinner.js";
 import { SessionContext } from "../../hooks/SessionContext";
 import { Link, useNavigate } from "react-router-dom";
+import { IoChevronDownSharp } from "react-icons/io5";
+import SearchBar from "../../components/SearchBar";
 import { API_URL } from "../../utils/constants";
 import * as S from "./style.js";
 import axios from "axios";
@@ -50,12 +51,7 @@ const Header = () => {
           <S.LogoBox>
             <Link to="/timeline">linkr</Link>
           </S.LogoBox>
-          <S.SearchBar>
-            <input placeholder="Search for people" />
-            <div>
-              <IoSearchSharp />
-            </div>
-          </S.SearchBar>
+          <SearchBar />
           <S.LoggedUser
             ref={profileRef}
             active={showLogOut}
