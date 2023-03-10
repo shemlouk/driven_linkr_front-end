@@ -44,12 +44,12 @@ export default function Trending() {
 
     return (
         <>
-            <TrendingSection>
+            <TrendingSection data-test="trending">
                 <span>Trending</span>
                 <HashtagList>
                 {
                     isLoading ? (<HashtagName>Carregando...</HashtagName>) : trendingTags.map((tag) => {
-                        return <HashtagName key={tag.id} onClick={() => selectHashtag(tag)} ># {tag.name}</HashtagName>
+                        return <HashtagName key={tag.id} onClick={() => selectHashtag(tag)} data-test="hashtag" ># {tag.name}</HashtagName>
                     })
                 }
                 </HashtagList>
