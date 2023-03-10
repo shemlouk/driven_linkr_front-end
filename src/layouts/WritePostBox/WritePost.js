@@ -92,3 +92,4 @@ const WritePost = ({getPosts}) => {
 }
 
 export default WritePost
+
