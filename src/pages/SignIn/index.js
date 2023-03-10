@@ -37,12 +37,12 @@ const SignIn = () => {
       }
 
       const {
-        data: { token, username, profilePicture },
+        data: { token, name, profilePicture, id },
       } = await axios.post(`${API_URL}/signin`, formData);
 
       const sessionData = {
         auth: { headers: { Authorization: `Bearer ${token}` } },
-        user: { username, profilePicture },
+        user: { name, profilePicture, id },
       };
 
       localStorage.session = JSON.stringify(sessionData);
