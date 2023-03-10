@@ -74,10 +74,6 @@ export default function Hashtag() {
                                         <P.RightSide>
                                             <P.PostUser>
                                                 <p>{post.name}</p>
-                                                <div>
-                                                    <span><IoPencilSharp /></span>
-                                                    <span><IoTrashOutline /></span>
-                                                </div>
                                             </P.PostUser>
                                             <P.PostContent>
                                                 <ReactTagify tagStyle={{fontWeight: 700, color: "white", cursor: "pointer"}} tagClicked={(tag)=> selectHashtag(tag)}>

@@ -10,6 +10,33 @@ import { API_URL } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import HashtagContext from "../../hooks/HashtagContext";
+import ReactModal from "react-modal";
+
+const customStyles = {
+    overlay: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100%",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        zIndex: 5,
+        display: "flex",
+    },
+    content: {
+        display: "flex",
+        width: "600px",
+        height: "262px",
+        backgroundColor: "#333333",
+        borderRadius: "50px",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "auto"
+    }
+}
+
+ReactModal.setAppElement('#root')
+
 
 const Timeline = () => {
     const navigate = useNavigate();
@@ -17,6 +44,7 @@ const Timeline = () => {
     const { setHashtag } = useContext(HashtagContext);
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
 
@@ -30,6 +58,7 @@ const Timeline = () => {
                     res = await axios.get(`${API_URL}/timeline`, session.auth)
                 }
                 setPostList(res.data)
+                console.log(session.user)
                 setIsLoading(false)
             } catch ({ response }) {
                 console.error(response)
@@ -41,7 +70,7 @@ const Timeline = () => {
 
     async function selectHashtag(hashtag) {
         hashtag = hashtag.replace("#", "");
-        
+
         try {
             const res = (await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)).data;
             setHashtag({
@@ -51,6 +80,14 @@ const Timeline = () => {
         } catch (error) {
             console.error(`selectHashtag: ${error}`);
         }
+    }
+
+    function closeModal() {
+        setIsModalOpen(false)
+    }
+
+    function openModal() {
+        setIsModalOpen(true)
     }
 
     return (
@@ -81,13 +118,16 @@ const Timeline = () => {
                                                 <Link to={`/user/${post.user_id}`}>
                                                     <p>{post.name}</p>
                                                 </Link>
-                                                <div>
-                                                    <span><IoPencilSharp /></span>
-                                                    <span><IoTrashOutline /></span>
-                                                </div>
+                                                {session ? (
+                                                    <div>
+                                                        <span><IoPencilSharp /></span>
+                                                        <span onClick={openModal}><IoTrashOutline /></span>
+                                                    </div>
+                                                ) : null
+                                                }
                                             </P.PostUser>
                                             <P.PostContent>
-                                                <ReactTagify tagStyle={{fontWeight: 700, color: "white", cursor: "pointer"}} tagClicked={(tag)=> selectHashtag(tag)}>
+                                                <ReactTagify tagStyle={{ fontWeight: 700, color: "white", cursor: "pointer" }} tagClicked={(tag) => selectHashtag(tag)}>
                                                     <p>{post.description}</p>
                                                 </ReactTagify>
                                                 <P.LinkPreview>
@@ -110,6 +150,20 @@ const Timeline = () => {
                     {session ? <Trending /> : null}
                 </P.ContentWrapper>
             </P.PageContainer>
+            <ReactModal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                style={customStyles}
+            >
+                <P.OverlayBox>
+                    <p>Are you sure you want to delete this post?</p>
+                    <div>
+                        <button className="no-btn" onClick={closeModal}>No, go back</button>
+                        <button className="yes-btn" onClick={closeModal}>Yes, delete it</button>
+                        
+                    </div>
+                </P.OverlayBox>
+            </ReactModal>
         </>
 
     )
