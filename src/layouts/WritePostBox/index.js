@@ -4,12 +4,14 @@ import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SessionContext } from "../../hooks/SessionContext";
+import { PublishContext } from "../../hooks/PublishContext";
 
 const WritePost = () => {
   const HASHTAG_REGEX = /(?:^|\s)#(\w+)/g;
 
   const navigate = useNavigate();
   const { session } = useContext(SessionContext);
+  const { setUpdateList } = useContext(PublishContext)
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState({
     url: "",
@@ -40,6 +42,7 @@ const WritePost = () => {
         url: "",
         description: "",
       });
+      setUpdateList(true)
       navigate("/timeline");
     } catch (error) {
       console.log(error);
