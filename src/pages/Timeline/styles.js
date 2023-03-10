@@ -244,5 +244,49 @@ export const SpecialMessage = styled.div`
 `;
 
 export const ImageCover = styled.img`
-  object-fit: cover;
-`;
+    object-fit: cover;
+`
+
+export const OverlayBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    p {
+        font-size: 34px;
+        font-family: "Lato", sans-serif;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin: auto;
+        text-align: center;
+    }
+
+    div {
+        width: 70%;
+        display: flex;
+        justify-content: space-between;
+        margin: 30px auto;
+
+
+        button {
+            width: 135px;
+            height: 37px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-family: "Lato", sans-serif;
+            font-weight: 700;
+
+            &.yes-btn {
+                background-color: #1877F2;
+                color: #FFFFFF;
+            }
+
+            &.no-btn {
+                background-color: #FFFFFF;
+                color: #1877F2;
+            }
+        }
+    }
+`

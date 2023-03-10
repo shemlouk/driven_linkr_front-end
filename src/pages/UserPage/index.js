@@ -68,10 +68,6 @@ const UserPage = () => {
                                                 <Link to={`/user/${post.user_id}`}>
                                                     <p>{post.name}</p>
                                                 </Link>
-                                                <div>
-                                                    <span><IoPencilSharp /></span>
-                                                    <span><IoTrashOutline /></span>
-                                                </div>
                                             </P.PostUser>
                                             <P.PostContent>
                                                 <p>{post.description}</p>
