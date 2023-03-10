@@ -17,7 +17,7 @@ const UserPage = () => {
     const [username, setUsername] = useState("")
 
     useEffect(() => {
-        if (!localSession) {
+        if (!session) {
             return navigate("/timeline");
         }
 
