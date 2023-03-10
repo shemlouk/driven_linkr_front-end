@@ -12,6 +12,7 @@ import { ReactTagify } from "react-tagify";
 import HashtagContext from "../../hooks/HashtagContext";
 import previewImage from "../../assets/defaultPreviewImage.png";
 import ReactModal from "react-modal";
+import { PublishContext } from "../../hooks/PublishContext";
 
 const customStyles = {
     overlay: {
@@ -42,6 +43,7 @@ const Timeline = () => {
     const navigate = useNavigate();
     const { session } = useContext(SessionContext);
     const { setHashtag } = useContext(HashtagContext);
+    const { updateList, setUpdateList } = useContext(PublishContext)
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -49,7 +51,7 @@ const Timeline = () => {
 
     useEffect(() => {
         getPosts()
-    }, [])
+    }, [updateList])
 
     async function getPosts() {
         try {
@@ -61,6 +63,7 @@ const Timeline = () => {
             }
             console.log(res.data);
             setPostList(res.data)
+            setUpdateList(false)
             setIsLoading(false)
         } catch ({ response }) {
             console.error(response)
@@ -131,7 +134,7 @@ const Timeline = () => {
                                                 <Link to={`/user/${post.user_id}`}>
                                                     <p>{post.name}</p>
                                                 </Link>
-                                                {session ? (
+                                                {session && session.user.id === post.user_id? (
                                                     <div>
                                                         <span><IoPencilSharp /></span>
                                                         <span onClick={() => openModal(post.id)}><IoTrashOutline /></span>
