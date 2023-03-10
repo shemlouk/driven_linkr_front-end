@@ -46,6 +46,7 @@ const SearchBar = () => {
     <S.Container ref={containerRef}>
       <DebounceInput
         minLength={3}
+        data-test="search"
         debounceTimeout={300}
         placeholder="Search for people"
         onChange={({ target }) => searchForUser(target.value)}
@@ -64,7 +65,7 @@ const SearchBar = () => {
           ) : (
             users.map((user) => (
               <S.SearchItem key={user.id}>
-                <Link to={`/user/${user.id}`}>
+                <Link to={`/user/${user.id}`} data-test="user-search">
                   <img src={user.profilePicture} />
                   <span>{user.name}</span>
                 </Link>
