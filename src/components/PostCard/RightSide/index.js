@@ -16,14 +16,14 @@ const RightSide = () => {
     <S.Container>
       <S.PostUser>
         <Link to={`/user/${user_id}`}>
-          <p>{name}</p>
+          <p data-test="username">{name}</p>
         </Link>
         {isLoggedIn && session.user.id === user_id ? (
           <div>
-            <span>
+            <span data-test="edit-btn">
               <IoPencilSharp />
             </span>
-            <span onClick={() => openModal(id)}>
+            <span data-test="delete-btn" onClick={() => openModal(id)}>
               <IoTrashOutline />
             </span>
           </div>
@@ -38,7 +38,7 @@ const RightSide = () => {
           }}
           tagClicked={(tag) => selectHashtag(tag)}
         >
-          <p>{description}</p>
+          <p data-test="description">{description}</p>
         </ReactTagify>
         <LinkPreview />
       </S.PostContent>

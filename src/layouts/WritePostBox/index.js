@@ -70,13 +70,14 @@ const WritePost = () => {
   };
   return (
     <>
-      <W.WritePostBox>
+      <W.WritePostBox data-test="publish-box">
         <W.LoggedUser>
           <img src={session.user.profilePicture} alt="avatar" />
         </W.LoggedUser>
         <W.PublishForm onSubmit={handleSubmit}>
           <p>What are you going to share today?</p>
           <input
+            data-test="link"
             disabled={isLoading}
             className="url-input"
             placeholder="http://..."
@@ -84,13 +85,14 @@ const WritePost = () => {
             onChange={(e) => setPost({ ...post, url: e.target.value })}
           />
           <textarea
+            data-test="description"
             disabled={isLoading}
             className="desc-input"
             placeholder="Awesome article about #Javascript..."
             value={post.description}
             onChange={(e) => setPost({ ...post, description: e.target.value })}
           />
-          <button disabled={isLoading}>
+          <button data-test="publish-btn" disabled={isLoading}>
             {isLoading ? "Publishing..." : "Publish"}
           </button>
         </W.PublishForm>

@@ -130,12 +130,13 @@ const Timeline = () => {
                                     ) : postList.length > 0 ? (
                                         postList.map((post) => (
                                             <PostCard
+                                                data-test="post"
                                                 key={post.id}
                                                 {...{ ...post, openModal, selectHashtag }}
                                             />
                                         ))
                                     ) : (
-                                        <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
+                                        <P.SpecialMessage data-test="message">There are no posts yet.</P.SpecialMessage>
                                     )}
                                 </P.PostListing>
                             </P.PostWrapper>
@@ -150,10 +151,15 @@ const Timeline = () => {
                         <P.OverlayBox>
                             <p>Are you sure you want to delete this post?</p>
                             <div>
-                                <button className="no-btn" onClick={closeModal}>
+                                <button
+                                    data-test="cancel"
+                                    className="no-btn"
+                                    onClick={closeModal}
+                                >
                                     No, go back
                                 </button>
                                 <button
+                                    data-test="confirm"
                                     className="yes-btn"
                                     onClick={() => deletePost(deletePostId)}
                                 >
