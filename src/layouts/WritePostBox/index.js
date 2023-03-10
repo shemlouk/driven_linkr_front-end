@@ -84,7 +84,7 @@ const WritePost = () => {
             value={post.url}
             onChange={(e) => setPost({ ...post, url: e.target.value })}
           />
-          <textarea
+          <input
             data-test="description"
             disabled={isLoading}
             className="desc-input"
