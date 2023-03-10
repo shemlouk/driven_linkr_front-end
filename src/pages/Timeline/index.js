@@ -107,6 +107,7 @@ const Timeline = () => {
             setPostList(newPostList);
         } catch (response) {
             console.error(response);
+            alert("An error occurred while trying to delete your post")
         }
         setIsDeleting(false)
         setIsModalOpen(false)
