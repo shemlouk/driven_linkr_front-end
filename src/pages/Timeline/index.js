@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
+import { PublishContext } from "../../hooks/PublishContext";
 import PostCard from "../../components/PostCard/index.js";
 import WritePost from "../../layouts/WritePostBox/index";
 import HashtagContext from "../../hooks/HashtagContext";
@@ -50,39 +51,38 @@ const Timeline = () => {
     const [isDeleting, setIsDeleting] = useState(false)
 
     useEffect(() => {
-        getPosts()
-    }, [updateList])
+        getPosts();
+    }, [updateList]);
 
     async function getPosts() {
         try {
-            let res
+            let res;
             if (!session) {
-                res = await axios.get(`${API_URL}/timeline`)
+                res = await axios.get(`${API_URL}/timeline`);
             } else {
-                res = await axios.get(`${API_URL}/timeline`, session.auth)
+                res = await axios.get(`${API_URL}/timeline`, session.auth);
             }
             console.log(res.data);
-            setPostList(res.data)
-            setUpdateList(false)
-            setIsLoading(false)
+            setPostList(res.data);
+            setUpdateList(false);
+            setIsLoading(false);
         } catch ({ response }) {
-            console.error(response)
-            alert("An error occurred while trying to fetch the posts, please refresh the page.")
+            console.error(response);
+            alert(
+                "An error occurred while trying to fetch the posts, please refresh the page."
+            );
         }
     }
-
-
-
-
-
 
     async function selectHashtag(hashtag) {
         hashtag = hashtag.replace("#", "");
 
         try {
-            const res = (await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)).data;
+            const res = (
+                await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)
+            ).data;
             setHashtag({
-                ...res
+                ...res,
             });
             navigate(`/hashtag/${hashtag}`);
         } catch (error) {
@@ -112,7 +112,7 @@ const Timeline = () => {
         setIsDeleting(false)
         setIsModalOpen(false)
     }
-
+    
     return (
         <>
             {isDeleting ? (
@@ -121,9 +121,7 @@ const Timeline = () => {
                 <>
                     <Header />
                     <P.PageContainer>
-                        <P.TitleBox>
-                            timeline
-                        </P.TitleBox>
+                        <P.TitleBox>timeline</P.TitleBox>
                         <P.ContentWrapper>
                             <P.PostWrapper>
                                 {session ? <WritePost getPosts={getPosts} /> : null}
@@ -153,15 +151,22 @@ const Timeline = () => {
                         <P.OverlayBox>
                             <p>Are you sure you want to delete this post?</p>
                             <div>
-                                <button className="no-btn" onClick={closeModal}>No, go back</button>
-                                <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
-
+                                <button className="no-btn" onClick={closeModal}>
+                                    No, go back
+                                </button>
+                                <button
+                                    className="yes-btn"
+                                    onClick={() => deletePost(deletePostId)}
+                                >
+                                    Yes, delete it
+                                </button>
                             </div>
                         </P.OverlayBox>
                     </ReactModal>
                 </>
-            )}
+            )};
         </>
+
     );
 };
 

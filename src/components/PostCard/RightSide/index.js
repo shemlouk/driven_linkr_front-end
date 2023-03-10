@@ -10,7 +10,7 @@ import * as S from "./styles.js";
 const RightSide = () => {
   const { id, user_id, name, description, openModal, selectHashtag } =
     useContext(PostContext);
-  const { isLoggedIn } = useContext(SessionContext);
+  const { isLoggedIn, session } = useContext(SessionContext);
 
   return (
     <S.Container>
@@ -18,7 +18,7 @@ const RightSide = () => {
         <Link to={`/user/${user_id}`}>
           <p>{name}</p>
         </Link>
-        {isLoggedIn ? (
+        {isLoggedIn && session.user.id === user_id ? (
           <div>
             <span>
               <IoPencilSharp />
