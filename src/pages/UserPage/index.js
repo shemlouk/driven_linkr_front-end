@@ -11,20 +11,25 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 const UserPage = () => {
     const { id } = useParams()
     const navigate = useNavigate()
+
     const { session } = useContext(SessionContext)
+
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
     const [username, setUsername] = useState("")
 
     useEffect(() => {
         if (!session) {
+
             return navigate("/timeline");
         }
 
         async function getUserPosts() {
 
             try {
+            
                 const res = await axios.get(`${API_URL}/user/${id}`, session.auth)
+
                 setPostList(res.data)
                 setUsername(res.data.name)
                 setIsLoading(false)
