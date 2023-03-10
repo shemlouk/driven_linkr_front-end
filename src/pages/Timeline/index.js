@@ -6,9 +6,12 @@ import WritePost from "../../layouts/WritePostBox/WritePost";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
+import { API_URL } from "../../utils/constants";
+import { Link } from "react-router-dom";
 
 const Timeline = () => {
     const { session } = useContext(SessionContext);
+    const localSession = JSON.parse(localStorage.getItem("session"));
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
 
@@ -17,7 +20,12 @@ const Timeline = () => {
         async function getPosts() {
 
             try {
-                const res = await axios.get(`${API_URL}/timeline`)
+                let res
+                if (!localSession) {
+                res = await axios.get(`${API_URL}/timeline`) 
+                } else {
+                res = await axios.get(`${API_URL}/timeline`, localSession.auth)
+                }
                 setPostList(res.data)
                 setIsLoading(false)
             } catch ({ response }) {
