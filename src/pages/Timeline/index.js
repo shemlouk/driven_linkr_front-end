@@ -10,6 +10,7 @@ import { API_URL } from "../../utils/constants";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import HashtagContext from "../../hooks/HashtagContext";
+import previewImage from "../../assets/defaultPreviewImage.png";
 
 const Timeline = () => {
     const navigate = useNavigate();
@@ -96,7 +97,11 @@ const Timeline = () => {
                                                         <p>{post.preview_desc}</p>
                                                         <p>{post.url}</p>
                                                     </div>
-                                                    <img src={post.preview_img} alt="preview_img" />
+                                                    <figure>
+
+
+                                                    <img src={post.preview_img} alt="preview_img" onError={({target}) => target.src = previewImage}/>
+                                                    </figure>
                                                 </P.LinkPreview>
                                             </P.PostContent>
                                         </P.RightSide>
