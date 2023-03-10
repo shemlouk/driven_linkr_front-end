@@ -43,7 +43,8 @@ const LeftSide = () => {
         <IoHeartOutline 
           data-tooltip-id="who-liked" 
           data-tooltip-content={tooltipText} 
-          data-tooltip-place="bottom" 
+          data-tooltip-place="bottom"
+          data-test="like-btn"
         />
         <Tooltip id="who-liked" 
           style={{
