@@ -130,13 +130,12 @@ const Timeline = () => {
                                     ) : postList.length > 0 ? (
                                         postList.map((post) => (
                                             <PostCard
-                                                data-test="post"
                                                 key={post.id}
                                                 {...{ ...post, openModal, selectHashtag }}
                                             />
                                         ))
                                     ) : (
-                                        <P.SpecialMessage data-test="message">There are no posts yet.</P.SpecialMessage>
+                                        <P.SpecialMessage data-test="message">There are no posts yet</P.SpecialMessage>
                                     )}
                                 </P.PostListing>
                             </P.PostWrapper>
