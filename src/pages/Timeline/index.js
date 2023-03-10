@@ -2,7 +2,7 @@ import Header from "../../layouts/Header/index";
 import React, { useState, useEffect, useContext } from "react";
 import * as P from "./styles";
 import { IoHeartOutline, IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-import WritePost from "../../layouts/WritePostBox/WritePost";
+import WritePost from "../../layouts/WritePostBox/index";
 import axios from "axios";
 import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
