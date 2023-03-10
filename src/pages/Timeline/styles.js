@@ -137,11 +137,14 @@ export const LinkPreview = styled.div`
         padding: 0 12px;
 
         span {
+            
             font-size: 16px;
             color: #CECECE;
         }
 
         p {
+            max-width: 400px;
+            word-break: break-all;
             font-size: 11px;
             color: #9B9595;
         }

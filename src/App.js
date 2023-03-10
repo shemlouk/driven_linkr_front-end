@@ -7,22 +7,26 @@ import SignIn from "./pages/SignIn/index.js";
 import { useState } from "react";
 import Hashtag from "./pages/Hashtag/index.js";
 import UserPage from "./pages/UserPage/index.js";
+import { PublishContextProvider } from "./hooks/PublishContext.js";
+
 
 const App = () => {
   const [hashtag, setHashtag] = useState(null);
   return (
     <SessionContextProvider>
-      <HashtagContext.Provider value={{ hashtag, setHashtag }}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route exact path="/timeline" element={<Timeline />} />
-            <Route exact path="/hashtag/:hashtagName" element={<Hashtag />} />
-            <Route path="/user/:id?" element={<UserPage />} />
-          </Routes>
-        </BrowserRouter>
-      </HashtagContext.Provider>
+      <PublishContextProvider>
+        <HashtagContext.Provider value={{ hashtag, setHashtag }}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route exact path="/timeline" element={<Timeline />} />
+              <Route exact path="/hashtag/:hashtagName" element={<Hashtag />} />
+              <Route path="/user/:id?" element={<UserPage />} />
+            </Routes>
+          </BrowserRouter>
+        </HashtagContext.Provider>
+      </PublishContextProvider>
     </SessionContextProvider>
   );
 };

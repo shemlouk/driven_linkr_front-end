@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import HashtagContext from "../../hooks/HashtagContext";
 import ReactModal from "react-modal";
+import { PublishContext } from "../../hooks/PublishContext";
 
 const customStyles = {
     overlay: {
@@ -42,6 +43,7 @@ const Timeline = () => {
     const navigate = useNavigate();
     const { session } = useContext(SessionContext);
     const { setHashtag } = useContext(HashtagContext);
+    const { updateList, setUpdateList } = useContext(PublishContext)
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -59,7 +61,8 @@ const Timeline = () => {
                     res = await axios.get(`${API_URL}/timeline`, session.auth)
                 }
                 setPostList(res.data)
-                console.log(session.user)
+                console.log(session.user.id)
+                setUpdateList(false)
                 setIsLoading(false)
             } catch ({ response }) {
                 console.error(response)
@@ -67,7 +70,7 @@ const Timeline = () => {
             }
         }
         getPosts()
-    }, [])
+    }, [updateList])
 
     async function selectHashtag(hashtag) {
         hashtag = hashtag.replace("#", "");
@@ -132,7 +135,7 @@ const Timeline = () => {
                                                 <Link to={`/user/${post.user_id}`}>
                                                     <p>{post.name}</p>
                                                 </Link>
-                                                {session ? (
+                                                {session && session.user.id === post.user_id? (
                                                     <div>
                                                         <span><IoPencilSharp /></span>
                                                         <span onClick={() => openModal(post.id)}><IoTrashOutline /></span>
@@ -174,7 +177,7 @@ const Timeline = () => {
                     <div>
                         <button className="no-btn" onClick={closeModal}>No, go back</button>
                         <button className="yes-btn" onClick={() => deletePost(deletePostId)}>Yes, delete it</button>
-                        
+
                     </div>
                 </P.OverlayBox>
             </ReactModal>

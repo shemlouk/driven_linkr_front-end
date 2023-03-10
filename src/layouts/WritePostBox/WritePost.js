@@ -4,6 +4,7 @@ import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { SessionContext } from "../../hooks/SessionContext";
+import { PublishContext } from "../../hooks/PublishContext";
 
 
 const WritePost = () => {
@@ -11,6 +12,7 @@ const WritePost = () => {
 
     const navigate = useNavigate()
     const { session } = useContext(SessionContext);
+    const { setUpdateList } = useContext(PublishContext)
     const [isLoading, setIsLoading] = useState(false)
     const [post, setPost] = useState({
         url: "",
@@ -24,12 +26,13 @@ const WritePost = () => {
         try {
 
             const sentHashtags = await saveHashtags()
-            
+
             const res = await axios.post(`${API_URL}/timeline`, post, session.auth)
             const post_id = res.data.id
-            
+
             const postHashtags = sentHashtags.map(hashtag_id => ({ post_id, hashtag_id }))
-            
+
+
             for (const postTag of postHashtags) {
                 await axios.post(`${API_URL}/posts/hashtag`, postTag, session.auth);
             }
@@ -39,6 +42,7 @@ const WritePost = () => {
                 url: "",
                 description: ""
             })
+            setUpdateList(true)
             navigate("/timeline")
 
         } catch (error) {
