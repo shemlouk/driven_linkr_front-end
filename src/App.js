@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn/index.js";
 import { useState } from "react";
 import Hashtag from "./pages/Hashtag/index.js";
 import UserPage from "./pages/UserPage/index.js";
+import 'react-tooltip/dist/react-tooltip.css';
 
 const App = () => {
   const [hashtag, setHashtag] = useState(null);
