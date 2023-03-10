@@ -11,7 +11,6 @@ import Trending from "../../layouts/Trending";
 import ReactModal from "react-modal";
 import * as P from "./styles";
 import axios from "axios";
-import { PublishContext } from "../../hooks/PublishContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 const customStyles = {
@@ -112,7 +111,7 @@ const Timeline = () => {
         setIsDeleting(false)
         setIsModalOpen(false)
     }
-    
+
     return (
         <>
             {isDeleting ? (
