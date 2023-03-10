@@ -7,10 +7,14 @@ import axios from "axios";
 import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
 import { API_URL } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
+import HashtagContext from "../../hooks/HashtagContext";
 
 const Timeline = () => {
+    const navigate = useNavigate();
     const { session } = useContext(SessionContext);
+    const { setHashtag } = useContext(HashtagContext);
     const [isLoading, setIsLoading] = useState(true)
     const [postList, setPostList] = useState([])
 
@@ -34,6 +38,20 @@ const Timeline = () => {
         }
         getPosts()
     }, [])
+
+    async function selectHashtag(hashtag) {
+        hashtag = hashtag.replace("#", "");
+        
+        try {
+            const res = (await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)).data;
+            setHashtag({
+                ...res
+            });
+            navigate(`/hashtag/${hashtag}`);
+        } catch (error) {
+            console.error(`selectHashtag: ${error}`);
+        }
+    }
 
     return (
         <>
@@ -69,7 +87,9 @@ const Timeline = () => {
                                                 </div>
                                             </P.PostUser>
                                             <P.PostContent>
-                                                <p>{post.description}</p>
+                                                <ReactTagify tagStyle={{fontWeight: 700, color: "white", cursor: "pointer"}} tagClicked={(tag)=> selectHashtag(tag)}>
+                                                    <p>{post.description}</p>
+                                                </ReactTagify>
                                                 <P.LinkPreview>
                                                     <div>
                                                         <span>{post.preview_title}</span>
