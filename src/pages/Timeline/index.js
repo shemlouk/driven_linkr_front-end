@@ -130,7 +130,6 @@ const Timeline = () => {
                                     ) : postList.length > 0 ? (
                                         postList.map((post) => (
                                             <PostCard
-                                                data-test="post"
                                                 key={post.id}
                                                 {...{ ...post, openModal, selectHashtag }}
                                             />
