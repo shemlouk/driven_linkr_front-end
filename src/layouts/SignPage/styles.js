@@ -43,14 +43,24 @@ export const Banner = styled.div`
   height: 100vh;
   background-color: var(--black);
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   font-family: "Oswald", sans-serif;
   font-weight: 700;
   color: white;
-  padding-left: 7%;
   user-select: none;
+  position: relative;
+  overflow: hidden;
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding-left: 7%;
+    background-color: #00000070;
+  }
   h1 {
     font-family: "Passion One", sans-serif;
     font-size: 106px;
@@ -65,10 +75,12 @@ export const Banner = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     height: 200px;
-    padding: 0px;
     margin-bottom: 40px;
-    align-items: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    div {
+      align-items: center;
+      padding: 0px;
+    }
     h1 {
       font-size: 76px;
       line-height: 76px;
@@ -78,6 +90,9 @@ export const Banner = styled.div`
       max-width: 500px;
       line-height: 34px;
       text-align: center;
+    }
+    canvas {
+      display: none;
     }
   }
 `;
