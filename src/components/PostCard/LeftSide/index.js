@@ -5,6 +5,9 @@ import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import PostContext from "../../../hooks/PostContext.js";
 import * as S from "./styles.js";
 import axios from "axios";
+import { Tooltip } from "react-tooltip";
+import 'react-tooltip/dist/react-tooltip.css'
+import "../../../assets/tooltip.css";
 
 const LeftSide = () => {
   const { profilePicture, profile_picture, likes_count, likes_names, id } =
@@ -32,11 +35,23 @@ const LeftSide = () => {
       <img src={profilePicture || profile_picture} />
       <div>
         {isLiked ? (
-          <IoHeart onClick={updateLike} />
+          <IoHeart onClick={updateLike}
+          data-tooltip-id="who-liked"
+          data-tooltip-content="Hello world"
+          data-tooltip-place="bottom"
+          />
         ) : (
-          <IoHeartOutline onClick={updateLike} />
+          <IoHeartOutline onClick={updateLike}
+          data-tooltip-id="who-liked"
+          data-tooltip-content="Hello world"
+          data-tooltip-place="bottom"
+          />
         )}
         <p>{numberLikes} likes</p>
+        <Tooltip id="who-liked"
+          className="tooltip-two"
+          classNameArrow="tooltip-arrow"
+        />
       </div>
     </S.Container>
   );
