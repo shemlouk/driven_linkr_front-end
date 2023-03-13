@@ -7,15 +7,17 @@ import * as S from "./styles.js";
 import axios from "axios";
 
 const LeftSide = () => {
-  const { profilePicture, profile_picture, likes, id } =
+  const { profilePicture, profile_picture, likes_count, likes_names, id } =
     useContext(PostContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [numberLikes, setNumberLikes] = useState(Number(likes_count) || 0);
   const { session } = useContext(SessionContext);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(likes_names?.includes(session.user.name));
 
   const updateLike = useCallback(async () => {
     if (isLoading) return;
     setIsLiked(!isLiked);
+    setNumberLikes(isLiked ? numberLikes - 1 : numberLikes + 1);
     setIsLoading(true);
     try {
       await axios.post(`${API_URL}/timeline/${id}/like`, {}, session.auth);
@@ -34,7 +36,7 @@ const LeftSide = () => {
         ) : (
           <IoHeartOutline onClick={updateLike} />
         )}
-        <p>{isLiked ? (likes ?? 0) + 1 : likes} likes</p>
+        <p>{numberLikes} likes</p>
       </div>
     </S.Container>
   );
