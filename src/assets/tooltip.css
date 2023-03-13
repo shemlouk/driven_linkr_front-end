@@ -1,0 +1,13 @@
+div div.tooltip-two {
+    font-family: "Lato", sans-serif;
+    font-size: 11px;
+    color: #505050;
+    background-color: white;
+    padding: 6px 9px;
+    width: auto;
+    height: auto;
+}
+
+div.tooltip-two .tooltip-arrow {
+    width: 10px;
+}
