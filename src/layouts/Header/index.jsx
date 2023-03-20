@@ -5,9 +5,8 @@ import { SessionContext } from "../../hooks/SessionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { IoChevronDownSharp } from "react-icons/io5";
 import SearchBar from "../../components/SearchBar";
-import { API_URL } from "../../utils/constants";
+import API from "../../config/api";
 import * as S from "./styles";
-import axios from "axios";
 
 const Header = () => {
   const { session, updateSession, isLoggedIn } = useContext(SessionContext);
@@ -24,7 +23,7 @@ const Header = () => {
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
-      await axios.delete(`${API_URL}/signin`, session.auth);
+      await API.delete(`/signin`, session.auth);
       delete localStorage.session;
       updateSession(null);
       navigate("/");

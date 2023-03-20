@@ -1,13 +1,12 @@
 import { SessionContext } from "../../hooks/SessionContext";
 import HashtagContext from "../../hooks/HashtagContext";
 import { useContext, useEffect, useState } from "react";
-import * as P from "../Timeline/styles";
 import PostCard from "../../components/PostCard";
-import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 import Trending from "../../layouts/Trending";
 import Header from "../../layouts/Header";
-import axios from "axios";
+import * as P from "../Timeline/styles";
+import API from "../../config/api";
 
 export default function Hashtag() {
   const { hashtag, setHashtag } = useContext(HashtagContext);
@@ -23,10 +22,8 @@ export default function Hashtag() {
 
     async function getPostsWithHashtag() {
       try {
-        const res = (
-          await axios.get(`${API_URL}/hashtag/${hashtag.id}`, session.auth)
-        ).data;
-        console.log(res);
+        const res = (await API.get(`/hashtag/${hashtag.id}`, session.auth))
+          .data;
         setPostList(res.slice(0, 20));
         setIsLoading(false);
       } catch (error) {
@@ -41,9 +38,8 @@ export default function Hashtag() {
     hashtag = hashtag.replace("#", "");
 
     try {
-      const res = (
-        await axios.get(`${API_URL}/hashtag/search/${hashtag}`, session.auth)
-      ).data;
+      const res = (await API.get(`/hashtag/search/${hashtag}`, session.auth))
+        .data;
       setHashtag({
         ...res,
       });

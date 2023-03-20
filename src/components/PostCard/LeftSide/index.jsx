@@ -1,10 +1,9 @@
 import { SessionContext } from "../../../hooks/SessionContext";
-import { API_URL } from "../../../utils/constants/index";
 import { useCallback, useContext, useState } from "react";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import PostContext from "../../../hooks/PostContext";
+import API from "../../../config/api";
 import * as S from "./styles";
-import axios from "axios";
 
 const LeftSide = () => {
   const { profilePicture, profile_picture, likes, id } =
@@ -18,7 +17,7 @@ const LeftSide = () => {
     setIsLiked(!isLiked);
     setIsLoading(true);
     try {
-      await axios.post(`${API_URL}/timeline/${id}/like`, {}, session.auth);
+      await API.post(`/timeline/${id}/like`, {}, session.auth);
       setIsLoading(false);
     } catch ({ response }) {
       console.error(response);

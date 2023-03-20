@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { API_URL } from "../../utils/constants";
 import { IoSearchSharp } from "react-icons/io5";
 import SearchSpinner from "../SearchSpinner";
 import { Link } from "react-router-dom";
+import API from "../../config/api";
 import * as S from "./styles";
-import axios from "axios";
 
 const SearchBar = () => {
   const [showResultBox, setShowResultBox] = useState(false);
@@ -21,9 +20,7 @@ const SearchBar = () => {
     setShowResultBox(true);
     setIsLoading(true);
     try {
-      const { data } = await axios.get(
-        `${API_URL}/user/search?name=${searchString}`
-      );
+      const { data } = await API.get(`/user/search?name=${searchString}`);
       setUsers(data);
       setIsLoading(false);
     } catch ({ message }) {
