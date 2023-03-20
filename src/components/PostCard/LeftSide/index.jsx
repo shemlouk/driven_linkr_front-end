@@ -1,12 +1,12 @@
+import { useCallback, useContext, useState, useEffect } from "react";
 import { SessionContext } from "../../../hooks/SessionContext";
-import { useCallback, useContext, useEffect, useState } from "react";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import PostContext from "../../../hooks/PostContext";
-import * as S from "./styles";
-import axios from "axios";
+import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
-import 'react-tooltip/dist/react-tooltip.css'
+import API from "../../../config/api";
 import "../../../assets/tooltip.css";
+import * as S from "./styles";
 
 const LeftSide = () => {
   const { profilePicture, profile_picture, likes_count, likes_names, id } =
@@ -15,7 +15,9 @@ const LeftSide = () => {
   const [numberLikes, setNumberLikes] = useState(Number(likes_count) || 0);
   const [tooltipText, setTooltipText] = useState("");
   const { session } = useContext(SessionContext);
-  const [isLiked, setIsLiked] = useState(likes_names?.includes(session.user.name));
+  const [isLiked, setIsLiked] = useState(
+    likes_names?.includes(session.user.name)
+  );
 
   const updateLike = useCallback(async () => {
     if (isLoading) return;
@@ -24,7 +26,7 @@ const LeftSide = () => {
     setIsLoading(true);
     loadTooltipText();
     try {
-      await axios.post(`/timeline/${id}/like`, {}, session.auth);
+      await API.post(`/timeline/${id}/like`, {}, session.auth);
       setIsLoading(false);
     } catch ({ response }) {
       console.error(response);
@@ -40,14 +42,22 @@ const LeftSide = () => {
         setTooltipText("");
         break;
       case 1:
-        setTooltipText(isLiked? "Você" : likes_names);
+        setTooltipText(isLiked ? "Você" : likes_names);
         break;
       case 2:
-        isLiked ? text = `Você e ${names.find((n) => n !== session.user.name)}` : text = `${names[0]} e ${names[1]}`;
+        isLiked
+          ? (text = `Você e ${names.find((n) => n !== session.user.name)}`)
+          : (text = `${names[0]} e ${names[1]}`);
         setTooltipText(text);
         break;
       default:
-        isLiked ? text = `Você, ${names.find((n) => n !== session.user.name)} e outras ${numberLikes - 2} pessoas` : text = `${names[0]}, ${names[1]} e outras ${numberLikes - 2} pessoas`;
+        isLiked
+          ? (text = `Você, ${names.find(
+              (n) => n !== session.user.name
+            )} e outras ${numberLikes - 2} pessoas`)
+          : (text = `${names[0]}, ${names[1]} e outras ${
+              numberLikes - 2
+            } pessoas`);
         setTooltipText(text);
         break;
     }
@@ -62,16 +72,23 @@ const LeftSide = () => {
       <img src={profilePicture || profile_picture} />
       <div>
         {isLiked ? (
-          <IoHeart onClick={updateLike}/>
+          <IoHeart
+            onClick={updateLike}
+            data-tooltip-id="who-liked"
+            data-tooltip-content={tooltipText}
+            data-tooltip-place="bottom"
+          />
         ) : (
-          <IoHeartOutline onClick={updateLike}/>
+          <IoHeartOutline
+            onClick={updateLike}
+            data-tooltip-id="who-liked"
+            data-tooltip-content={tooltipText}
+            data-tooltip-place="bottom"
+          />
         )}
-        <p 
-          data-tooltip-id="who-liked"
-          data-tooltip-content={tooltipText}
-          data-tooltip-place="bottom"
-        >{numberLikes} likes</p>
-        <Tooltip id="who-liked"
+        <p>{numberLikes} likes</p>
+        <Tooltip
+          id="who-liked"
           className="tooltip-two"
           classNameArrow="tooltip-arrow"
         />

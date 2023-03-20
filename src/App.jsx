@@ -1,13 +1,13 @@
-import { SessionContextProvider } from "./hooks/SessionContext.js";
-import { PublishContextProvider } from "./hooks/PublishContext.js";
+import { SessionContextProvider } from "./hooks/SessionContext";
+import { PublishContextProvider } from "./hooks/PublishContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HashtagContext from "./hooks/HashtagContext.js";
-import Timeline from "./pages/Timeline/index.js";
-import SignUp from "./pages/SignUp/index.js";
-import SignIn from "./pages/SignIn/index.js";
+import HashtagContext from "./hooks/HashtagContext";
+import UserPage from "./pages/UserPage/index";
+import Timeline from "./pages/Timeline/index";
+import Hashtag from "./pages/Hashtag/index";
+import SignUp from "./pages/SignUp/index";
+import SignIn from "./pages/SignIn/index";
 import { useState } from "react";
-import Hashtag from "./pages/Hashtag/index.js";
-import UserPage from "./pages/UserPage/index.js";
 
 const App = () => {
   const [hashtag, setHashtag] = useState(null);

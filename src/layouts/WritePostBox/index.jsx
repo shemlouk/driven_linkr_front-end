@@ -1,17 +1,16 @@
-import * as W from "./styles";
-import { useContext, useState } from "react";
-import { API_URL } from "../../utils/constants";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { SessionContext } from "../../hooks/SessionContext";
 import { PublishContext } from "../../hooks/PublishContext";
+import { SessionContext } from "../../hooks/SessionContext";
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import API from "../../config/api";
+import * as W from "./styles";
 
 const WritePost = () => {
   const HASHTAG_REGEX = /(?:^|\s)#(\w+)/g;
 
   const navigate = useNavigate();
   const { session } = useContext(SessionContext);
-  const { setUpdateList } = useContext(PublishContext)
+  const { setUpdateList } = useContext(PublishContext);
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState({
     url: "",
@@ -25,7 +24,7 @@ const WritePost = () => {
     try {
       const sentHashtags = await saveHashtags();
 
-      const res = await axios.post(`${API_URL}/timeline`, post, session.auth);
+      const res = await API.post(`/timeline`, post, session.auth);
       const post_id = res.data.id;
 
       const postHashtags = sentHashtags.map((hashtag_id) => ({
@@ -34,7 +33,7 @@ const WritePost = () => {
       }));
 
       for (const postTag of postHashtags) {
-        await axios.post(`${API_URL}/posts/hashtag`, postTag, session.auth);
+        await API.post(`/posts/hashtag`, postTag, session.auth);
       }
 
       setIsLoading(false);
@@ -42,7 +41,7 @@ const WritePost = () => {
         url: "",
         description: "",
       });
-      setUpdateList(true)
+      setUpdateList(true);
       navigate("/timeline");
     } catch (error) {
       console.log(error);
@@ -58,9 +57,8 @@ const WritePost = () => {
         .map((tag) => tag.replace("#", "").trim());
       const hashtagIds = [];
       for (const tag of hashtags) {
-        const id = (
-          await axios.post(`${API_URL}/hashtag`, { name: tag }, session.auth)
-        ).data.id;
+        const id = (await API.post(`/hashtag`, { name: tag }, session.auth))
+          .data.id;
         hashtagIds.push(id);
       }
       return hashtagIds;

@@ -1,5 +1,3 @@
-export const API_URL = process.env.REACT_APP_API_URL;
-
 export const INPUTS = [
   {
     form: ["signup", "signin"],

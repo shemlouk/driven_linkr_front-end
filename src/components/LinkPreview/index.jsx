@@ -1,7 +1,7 @@
 import previewImage from "../../assets/defaultPreviewImage.png";
-import PostContext from "../../hooks/PostContext.js";
+import PostContext from "../../hooks/PostContext";
 import { useCallback, useContext } from "react";
-import * as S from "./styles.js";
+import * as S from "./styles";
 import { Link } from "react-router-dom";
 
 const LinkPreview = () => {

@@ -1,13 +1,12 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import profilePicture from "../../assets/defaultProfilePicture.webp";
-import LoadingSpinner from "../../components/LoadingSpinner.js";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { SessionContext } from "../../hooks/SessionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { IoChevronDownSharp } from "react-icons/io5";
 import SearchBar from "../../components/SearchBar";
-import { API_URL } from "../../utils/constants";
-import * as S from "./style.js";
-import axios from "axios";
+import API from "../../config/api";
+import * as S from "./styles";
 
 const Header = () => {
   const { session, updateSession, isLoggedIn } = useContext(SessionContext);
@@ -24,7 +23,7 @@ const Header = () => {
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
-      await axios.delete(`${API_URL}/signin`, session.auth);
+      await API.delete(`/signin`, session.auth);
       delete localStorage.session;
       updateSession(null);
       navigate("/");

@@ -1,13 +1,13 @@
-import concatErrorMessages from "../../utils/concatErrorMessages.js";
 import { Fragment, useCallback, useContext, useState } from "react";
-import { INPUTS, API_URL } from "../../utils/constants/index.js";
-import { SessionContext } from "../../hooks/SessionContext.js";
-import ButtonSpinner from "../../components/ButtonSpinner.js";
-import * as F from "../../components/formComponents.js";
-import SignPage from "../../layouts/SignPage/index.js";
+import concatErrorMessages from "../../utils/concatErrorMessages";
+import { SessionContext } from "../../hooks/SessionContext";
+import ButtonSpinner from "../../components/ButtonSpinner";
+import * as F from "../../components/formComponents";
+import { INPUTS } from "../../utils/constants/index";
 import { Link, useNavigate } from "react-router-dom";
+import SignPage from "../../layouts/SignPage/index";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import API from "../../config/api";
 import Joi from "joi";
 
 const schema = Joi.object({
@@ -38,7 +38,7 @@ const SignIn = () => {
 
       const {
         data: { token, name, profilePicture, id },
-      } = await axios.post(`${API_URL}/signin`, formData);
+      } = await API.post(`/signin`, formData);
 
       const sessionData = {
         auth: { headers: { Authorization: `Bearer ${token}` } },

@@ -1,12 +1,12 @@
-import concatErrorMessages from "../../utils/concatErrorMessages.js";
-import { INPUTS, API_URL } from "../../utils/constants/index.js";
-import ButtonSpinner from "../../components/ButtonSpinner.js";
-import * as F from "../../components/formComponents.js";
+import concatErrorMessages from "../../utils/concatErrorMessages";
+import ButtonSpinner from "../../components/ButtonSpinner";
 import { Fragment, useCallback, useState } from "react";
-import SignPage from "../../layouts/SignPage/index.js";
+import { INPUTS } from "../../utils/constants/index";
+import * as F from "../../components/formComponents";
 import { Link, useNavigate } from "react-router-dom";
+import SignPage from "../../layouts/SignPage/index";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import API from "../../config/api";
 import Joi from "joi";
 
 const schema = Joi.object({
@@ -35,7 +35,7 @@ const SignUp = () => {
         setIsLoading(false);
         return;
       }
-      await axios.post(`${API_URL}/signup`, data);
+      await API.post(`/signup`, data);
       navigate("/");
     } catch ({ response }) {
       if (response.status === 409) alert("Email already signed up!");

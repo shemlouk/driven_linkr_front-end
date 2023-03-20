@@ -1,7 +1,7 @@
-import PostContext from "../../hooks/PostContext.js";
-import RightSide from "./RightSide/index.js";
-import LeftSide from "./LeftSide/index.js";
-import * as S from "./styles.js";
+import PostContext from "../../hooks/PostContext";
+import RightSide from "./RightSide/index";
+import LeftSide from "./LeftSide/index";
+import * as S from "./styles";
 
 const PostCard = (props) => {
   return (
