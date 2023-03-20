@@ -6,7 +6,7 @@ import Trending from "../../layouts/Trending";
 import { SessionContext } from "../../hooks/SessionContext";
 import { API_URL } from "../../utils/constants";
 import { useParams, useNavigate } from "react-router-dom";
-import PostCard from "../../components/PostCard/index.js";
+import PostCard from "../../components/PostCard/index";
 
 
 const UserPage = () => {

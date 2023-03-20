@@ -1,7 +1,7 @@
 import { SessionContext } from "../../hooks/SessionContext";
 import HashtagContext from "../../hooks/HashtagContext";
 import { useContext, useEffect, useState } from "react";
-import * as P from "../../pages/Timeline/styles";
+import * as P from "../Timeline/styles";
 import PostCard from "../../components/PostCard";
 import { API_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";

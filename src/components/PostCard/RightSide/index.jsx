@@ -1,11 +1,11 @@
-import { SessionContext } from "../../../hooks/SessionContext.js";
+import { SessionContext } from "../../../hooks/SessionContext";
 import { IoTrashOutline, IoPencilSharp } from "react-icons/io5";
-import PostContext from "../../../hooks/PostContext.js";
-import LinkPreview from "../../LinkPreview/index.js";
+import PostContext from "../../../hooks/PostContext";
+import LinkPreview from "../../LinkPreview/index";
 import { ReactTagify } from "react-tagify";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import * as S from "./styles.js";
+import * as S from "./styles";
 
 const RightSide = () => {
   const { id, user_id, name, description, openModal, selectHashtag } =

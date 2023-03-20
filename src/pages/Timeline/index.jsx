@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import { PublishContext } from "../../hooks/PublishContext";
-import PostCard from "../../components/PostCard/index.js";
+import PostCard from "../../components/PostCard/index";
 import WritePost from "../../layouts/WritePostBox/index";
 import HashtagContext from "../../hooks/HashtagContext";
 import Header from "../../layouts/Header/index";

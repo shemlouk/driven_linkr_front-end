@@ -1,12 +1,12 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import profilePicture from "../../assets/defaultProfilePicture.webp";
-import LoadingSpinner from "../../components/LoadingSpinner.js";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { SessionContext } from "../../hooks/SessionContext";
 import { Link, useNavigate } from "react-router-dom";
 import { IoChevronDownSharp } from "react-icons/io5";
 import SearchBar from "../../components/SearchBar";
 import { API_URL } from "../../utils/constants";
-import * as S from "./style.js";
+import * as S from "./styles";
 import axios from "axios";
 
 const Header = () => {

@@ -1,4 +1,4 @@
-import ParticlesAnimation from "../utils/particles.js";
+import ParticlesAnimation from "../utils/particles";
 import { useEffect, useRef } from "react";
 
 const config = {

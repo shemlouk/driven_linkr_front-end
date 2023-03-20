@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HashtagContext from "../../hooks/HashtagContext";
-import { HashtagList, HashtagName, TrendingSection } from "./styled";
+import { HashtagList, HashtagName, TrendingSection } from "./styles";
 
 
 export default function Trending() {

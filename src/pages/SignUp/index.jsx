@@ -1,9 +1,9 @@
-import concatErrorMessages from "../../utils/concatErrorMessages.js";
-import { INPUTS, API_URL } from "../../utils/constants/index.js";
-import ButtonSpinner from "../../components/ButtonSpinner.js";
-import * as F from "../../components/formComponents.js";
+import concatErrorMessages from "../../utils/concatErrorMessages";
+import { INPUTS, API_URL } from "../../utils/constants/index";
+import ButtonSpinner from "../../components/ButtonSpinner";
+import * as F from "../../components/formComponents";
 import { Fragment, useCallback, useState } from "react";
-import SignPage from "../../layouts/SignPage/index.js";
+import SignPage from "../../layouts/SignPage/index";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";

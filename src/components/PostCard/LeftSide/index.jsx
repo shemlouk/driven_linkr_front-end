@@ -1,9 +1,9 @@
-import { SessionContext } from "../../../hooks/SessionContext.js";
-import { API_URL } from "../../../utils/constants/index.js";
+import { SessionContext } from "../../../hooks/SessionContext";
+import { API_URL } from "../../../utils/constants/index";
 import { useCallback, useContext, useState } from "react";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
-import PostContext from "../../../hooks/PostContext.js";
-import * as S from "./styles.js";
+import PostContext from "../../../hooks/PostContext";
+import * as S from "./styles";
 import axios from "axios";
 
 const LeftSide = () => {
