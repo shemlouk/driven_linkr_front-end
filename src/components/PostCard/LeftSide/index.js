@@ -1,5 +1,4 @@
 import { SessionContext } from "../../../hooks/SessionContext";
-import { API_URL } from "../../../utils/constants/index";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import PostContext from "../../../hooks/PostContext";
@@ -25,7 +24,7 @@ const LeftSide = () => {
     setIsLoading(true);
     loadTooltipText();
     try {
-      await axios.post(`${API_URL}/timeline/${id}/like`, {}, session.auth);
+      await axios.post(`/timeline/${id}/like`, {}, session.auth);
       setIsLoading(false);
     } catch ({ response }) {
       console.error(response);
