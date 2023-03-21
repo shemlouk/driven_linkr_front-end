@@ -13,7 +13,7 @@ const UserPage = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [postList, setPostList] = useState([]);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     if (!session) {
@@ -24,7 +24,10 @@ const UserPage = () => {
       try {
         const res = await API.get(`/user/${id}`, session.auth);
         setPostList(res.data);
-        setUsername(res.data[0].name);
+        setUser({
+          username: res.data[0].name,
+          profilePicture: res.data[0].profile_picture,
+        });
         setIsLoading(false);
       } catch ({ response }) {
         console.error(response);
@@ -37,7 +40,11 @@ const UserPage = () => {
   }, []);
 
   return (
-    <MainPage title={username && username + "' posts"} {...{ isLoading }}>
+    <MainPage
+      title={user && user.username + "' posts"}
+      profilePicture={user.profilePicture}
+      {...{ isLoading }}
+    >
       {postList.length > 0 &&
         postList.map((post) => <PostCard key={post.id} {...post} />)}
     </MainPage>
