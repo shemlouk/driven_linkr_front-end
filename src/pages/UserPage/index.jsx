@@ -2,9 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useParams, useNavigate } from "react-router-dom";
 import PostCard from "../../components/PostCard/index";
-import Header from "../../layouts/Header/index";
-import Trending from "../../layouts/Trending";
-import * as P from "../Timeline/styles";
+import MainPage from "../../layouts/MainPage/index";
 import API from "../../config/api";
 
 const UserPage = () => {
@@ -39,26 +37,10 @@ const UserPage = () => {
   }, []);
 
   return (
-    <>
-      <Header />
-      <P.PageContainer>
-        <P.TitleBox>{`${username}`}'s posts</P.TitleBox>
-        <P.ContentWrapper>
-          <P.PostWrapper>
-            <P.PostListing>
-              {isLoading ? (
-                <P.SpecialMessage>Loading...</P.SpecialMessage>
-              ) : postList.length > 0 ? (
-                postList.map((post) => <PostCard key={post.id} {...post} />)
-              ) : (
-                <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
-              )}
-            </P.PostListing>
-          </P.PostWrapper>
-          <Trending />
-        </P.ContentWrapper>
-      </P.PageContainer>
-    </>
+    <MainPage title={username && username + "' posts"} {...{ isLoading }}>
+      {postList.length > 0 &&
+        postList.map((post) => <PostCard key={post.id} {...post} />)}
+    </MainPage>
   );
 };
 
