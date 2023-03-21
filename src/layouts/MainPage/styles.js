@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const PageContainer = styled.main`
+export const Container = styled.main`
   display: flex;
   flex-direction: column;
   width: 80%;
@@ -11,11 +11,21 @@ export const PageContainer = styled.main`
 `;
 
 export const TitleBox = styled.div`
-  font-family: "Oswald", sans-serif;
-  font-weight: 700;
-  font-size: 43px;
   color: #ffffff;
   margin-bottom: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h1 {
+    padding-bottom: 15px;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    font-size: 43px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const ContentWrapper = styled.div`
@@ -43,4 +53,29 @@ export const SpecialMessage = styled.div`
   font-size: 32px;
   color: white;
   letter-spacing: 0.1em;
+`;
+
+export const FollowButton = styled.button`
+  width: 112px;
+  height: 31px;
+  background-color: ${({ whiteMode }) => (whiteMode ? "white" : "var(--blue)")};
+  border: none;
+  font-family: "Lato", sans-serif;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  color: ${({ whiteMode }) => (whiteMode ? "var(--blue)" : "white")};
+  cursor: pointer;
+  :hover {
+    filter: brightness(1.1);
+  }
+`;
+
+export const ProfilePicture = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 18px;
+  border-radius: 50%;
 `;
