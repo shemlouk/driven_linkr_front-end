@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState, useEffect } from "react";
 import { SessionContext } from "../../../hooks/SessionContext";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import { AiOutlineComment } from "react-icons/ai";
 import PostContext from "../../../hooks/PostContext";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
@@ -9,7 +10,7 @@ import "../../../assets/tooltip.css";
 import * as S from "./styles";
 
 const LeftSide = () => {
-  const { profilePicture, profile_picture, likes_count, likes_names, id } =
+  const { profilePicture, profile_picture, likes_count, likes_names, num_comments, id } =
     useContext(PostContext);
   const [isLoading, setIsLoading] = useState(false);
   const [numberLikes, setNumberLikes] = useState(Number(likes_count) || 0);
@@ -72,7 +73,7 @@ const LeftSide = () => {
       <img src={profilePicture || profile_picture} />
       <div>
         {isLiked ? (
-          <IoHeart onClick={updateLike} />
+          <IoHeart onClick={updateLike} className="heart" />
         ) : (
           <IoHeartOutline onClick={updateLike} />
         )}
@@ -86,6 +87,10 @@ const LeftSide = () => {
           className="tooltip-two"
           classNameArrow="tooltip-arrow"
         />
+      </div>
+      <div>
+        <AiOutlineComment/>
+        <p>{`${num_comments || 0} comments`}</p>
       </div>
     </S.Container>
   );
