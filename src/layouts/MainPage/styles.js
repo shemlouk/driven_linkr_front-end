@@ -67,6 +67,8 @@ export const FollowButton = styled.button`
   line-height: 17px;
   color: ${({ whiteMode }) => (whiteMode ? "var(--blue)" : "white")};
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 `;
 
 export const ProfilePicture = styled.img`
