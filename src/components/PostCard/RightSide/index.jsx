@@ -30,6 +30,7 @@ const RightSide = () => {
     if (e.key === "Enter") {
       setIsLoading(true)
       try {
+        console.log({ description: descInput })
         await API.put(`/user/post/${id}`, { description: descInput }, session.auth);
         setIsEditing(false)
       } catch (response) {
@@ -61,28 +62,28 @@ const RightSide = () => {
         ) : null}
       </S.PostUser>
       <S.PostContent>
-        <ReactTagify
-          tagStyle={{
-            fontWeight: 700,
-            color: "white",
-            cursor: "pointer",
-          }}
-          tagClicked={(tag) => selectHashtag(tag)}
-        >
-          {isEditing ? (
-            <input
-              data-test="edit-input"
-              ref={descRef}
-              onKeyDown={finishEdit}
-              onChange={(e) => setDescInput(e.target.value)}
-              value={descInput}
-              type="text"
-              disabled={isLoading}
-            />
-          ) : (
+        {isEditing ? (
+          <input
+            data-test="edit-input"
+            ref={descRef}
+            onKeyDown={finishEdit}
+            onChange={(e) => setDescInput(e.target.value)}
+            value={descInput}
+            type="text"
+            disabled={isLoading}
+          />
+        ) : (
+          <ReactTagify
+            tagStyle={{
+              fontWeight: 700,
+              color: "white",
+              cursor: "pointer",
+            }}
+            tagClicked={(tag) => selectHashtag(tag)}
+          >
             <p data-test="description">{description}</p>
-          )}
-        </ReactTagify>
+          </ReactTagify>
+        )}
         <LinkPreview />
       </S.PostContent>
     </S.Container>
