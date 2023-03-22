@@ -72,21 +72,15 @@ const LeftSide = () => {
       <img src={profilePicture || profile_picture} />
       <div>
         {isLiked ? (
-          <IoHeart
-            onClick={updateLike}
-            data-tooltip-id="who-liked"
-            data-tooltip-content={tooltipText}
-            data-tooltip-place="bottom"
-          />
+          <IoHeart onClick={updateLike} />
         ) : (
-          <IoHeartOutline
-            onClick={updateLike}
-            data-tooltip-id="who-liked"
-            data-tooltip-content={tooltipText}
-            data-tooltip-place="bottom"
-          />
+          <IoHeartOutline onClick={updateLike} />
         )}
-        <p>{numberLikes} likes</p>
+        <p
+          data-tooltip-id="who-liked"
+          data-tooltip-content={tooltipText}
+          data-tooltip-place="bottom"
+        >{numberLikes} likes</p>
         <Tooltip
           id="who-liked"
           className="tooltip-two"
