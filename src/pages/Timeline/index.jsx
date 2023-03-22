@@ -60,12 +60,10 @@ const Timeline = () => {
       } else {
         res = await API.get(`/timeline`, session.auth);
       }
-      console.log(res.data);
       setPostList(res.data);
       setUpdateList(false);
       setIsLoading(false);
     } catch ({ response }) {
-      console.error(response);
       alert(
         "An error occurred while trying to fetch the posts, please refresh the page."
       );

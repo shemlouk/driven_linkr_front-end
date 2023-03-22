@@ -2,9 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useParams, useNavigate } from "react-router-dom";
 import PostCard from "../../components/PostCard/index";
-import Header from "../../layouts/Header/index";
-import Trending from "../../layouts/Trending";
-import * as P from "../Timeline/styles";
+import MainPage from "../../layouts/MainPage/index";
 import API from "../../config/api";
 
 const UserPage = () => {
@@ -15,7 +13,7 @@ const UserPage = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [postList, setPostList] = useState([]);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     if (!session) {
@@ -26,7 +24,10 @@ const UserPage = () => {
       try {
         const res = await API.get(`/user/${id}`, session.auth);
         setPostList(res.data);
-        setUsername(res.data[0].name);
+        setUser({
+          username: res.data[0].name,
+          profilePicture: res.data[0].profile_picture,
+        });
         setIsLoading(false);
       } catch ({ response }) {
         console.error(response);
@@ -39,26 +40,14 @@ const UserPage = () => {
   }, []);
 
   return (
-    <>
-      <Header />
-      <P.PageContainer>
-        <P.TitleBox>{`${username}`}'s posts</P.TitleBox>
-        <P.ContentWrapper>
-          <P.PostWrapper>
-            <P.PostListing>
-              {isLoading ? (
-                <P.SpecialMessage>Loading...</P.SpecialMessage>
-              ) : postList.length > 0 ? (
-                postList.map((post) => <PostCard key={post.id} {...post} />)
-              ) : (
-                <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
-              )}
-            </P.PostListing>
-          </P.PostWrapper>
-          <Trending />
-        </P.ContentWrapper>
-      </P.PageContainer>
-    </>
+    <MainPage
+      title={user && user.username + "' posts"}
+      profilePicture={user.profilePicture}
+      {...{ isLoading }}
+    >
+      {postList.length > 0 &&
+        postList.map((post) => <PostCard key={post.id} {...post} />)}
+    </MainPage>
   );
 };
 
