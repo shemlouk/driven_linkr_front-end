@@ -1,14 +1,14 @@
 import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
 
-const ButtonSpinner = () => {
+const ButtonSpinner = ({ bgColor, size, color }) => {
   return (
-    <Container>
+    <Container bgColor={bgColor || "#ffffff50"}>
       <ThreeDots
-        height="80"
-        width="80"
+        height={size || "80"}
+        width={size || "80"}
         radius="9"
-        color="#fff"
+        color={color || "#fff"}
         ariaLabel="three-dots-loading"
         wrapperStyle={{}}
         wrapperClassName=""
@@ -27,7 +27,7 @@ const Container = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
-  background-color: #ffffff50;
+  background-color: ${({ bgColor }) => bgColor};
 `;
 
 export default ButtonSpinner;

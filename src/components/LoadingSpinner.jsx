@@ -30,6 +30,7 @@ const Container = styled.div`
   top: 0px;
   left: 0px;
   background-color: var(--black);
+  z-index: 2;
   p {
     margin-top: 20px;
     color: white;

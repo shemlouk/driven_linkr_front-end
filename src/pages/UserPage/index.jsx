@@ -43,7 +43,7 @@ const UserPage = () => {
     <MainPage
       title={user && user.username + "' posts"}
       profilePicture={user.profilePicture}
-      {...{ isLoading }}
+      postsAreLoading={isLoading}
     >
       {postList.length > 0 &&
         postList.map((post) => <PostCard key={post.id} {...post} />)}
