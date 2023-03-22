@@ -30,8 +30,8 @@ const RightSide = () => {
     if (e.key === "Enter") {
       setIsLoading(true)
       try {
-        console.log({ description: descInput })
         await API.put(`/user/post/${id}`, { description: descInput }, session.auth);
+        setDescInput(descRef.current.value)
         setIsEditing(false)
       } catch (response) {
         console.error(response);
@@ -81,7 +81,7 @@ const RightSide = () => {
             }}
             tagClicked={(tag) => selectHashtag(tag)}
           >
-            <p data-test="description">{description}</p>
+            <p data-test="description">{descInput}</p>
           </ReactTagify>
         )}
         <LinkPreview />
