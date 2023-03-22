@@ -37,12 +37,12 @@ const SignIn = () => {
       }
 
       const {
-        data: { token, name, profilePicture, id },
+        data: { token, name, profilePicture, id, network },
       } = await API.post(`/signin`, formData);
 
       const sessionData = {
         auth: { headers: { Authorization: `Bearer ${token}` } },
-        user: { name, profilePicture, id },
+        user: { name, profilePicture, id, network },
       };
 
       localStorage.session = JSON.stringify(sessionData);
