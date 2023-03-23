@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { SessionContext } from "../../hooks/SessionContext";
 import { DebounceInput } from "react-debounce-input";
 import { IoSearchSharp } from "react-icons/io5";
 import SearchSpinner from "../SearchSpinner";
@@ -11,6 +12,9 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const containerRef = useRef();
+  const {
+    session: { user },
+  } = useContext(SessionContext);
 
   const searchForUser = useCallback(async (searchString) => {
     if (!searchString) {
@@ -21,6 +25,8 @@ const SearchBar = () => {
     setIsLoading(true);
     try {
       const { data } = await API.get(`/user/search?name=${searchString}`);
+      data.forEach((u) => (u.isFollowing = user.network.includes(u.id)));
+      data.sort((a, b) => b.isFollowing - a.isFollowing);
       setUsers(data);
       setIsLoading(false);
     } catch ({ message }) {
@@ -61,7 +67,7 @@ const SearchBar = () => {
             </S.SearchItem>
           ) : (
             users.map((user) => (
-              <S.SearchItem key={user.id}>
+              <S.SearchItem key={user.id} showFollowing={user.isFollowing}>
                 <Link to={`/user/${user.id}`} data-test="user-search">
                   <img src={user.profilePicture} />
                   <span>{user.name}</span>
