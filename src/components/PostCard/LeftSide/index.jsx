@@ -9,7 +9,8 @@ import API from "../../../config/api";
 import "../../../assets/tooltip.css";
 import * as S from "./styles";
 
-const LeftSide = () => {
+const LeftSide = ({showComments, setShowComments}) => {
+  console.log(showComments);
   const { profilePicture, profile_picture, likes_count, likes_names, num_comments, id } =
     useContext(PostContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +90,7 @@ const LeftSide = () => {
         />
       </div>
       <div>
-        <AiOutlineComment/>
+        <AiOutlineComment onClick={() => {setShowComments(!showComments)}}/>
         <p>{`${num_comments || 0} comments`}</p>
       </div>
     </S.Container>
