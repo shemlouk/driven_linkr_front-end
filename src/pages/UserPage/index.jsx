@@ -16,16 +16,16 @@ const UserPage = () => {
   const getUserPosts = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await API.get(`/user/${id}`, session.auth);
-      setPostList(res.data);
+      const { data } = await API.get(`/user/${id}`, session.auth);
+      setPostList(data.posts);
+      setIsLoading(false);
       setUser({
-        username: res.data[0].name,
-        profilePicture: res.data[0].profile_picture,
+        username: data.name,
+        profilePicture: data.profile_picture,
       });
-      setIsLoading(false);
     } catch ({ response }) {
-      setIsLoading(false);
       console.error(response);
+      setIsLoading(false);
       alert(
         "An error occurred while trying to fetch the posts, please refresh the page."
       );
