@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useParams, useNavigate } from "react-router-dom";
 import PostCard from "../../components/PostCard/index";
@@ -6,38 +6,39 @@ import MainPage from "../../layouts/MainPage/index";
 import API from "../../config/api";
 
 const UserPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
-
-  const [isLoading, setIsLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const getUserPosts = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await API.get(`/user/${id}`, session.auth);
+      setPostList(res.data);
+      setUser({
+        username: res.data[0].name,
+        profilePicture: res.data[0].profile_picture,
+      });
+      setIsLoading(false);
+    } catch ({ response }) {
+      setIsLoading(false);
+      console.error(response);
+      alert(
+        "An error occurred while trying to fetch the posts, please refresh the page."
+      );
+    }
+  });
 
   useEffect(() => {
     if (!session) {
-      return navigate("/timeline");
-    }
-
-    async function getUserPosts() {
-      try {
-        const res = await API.get(`/user/${id}`, session.auth);
-        setPostList(res.data);
-        setUser({
-          username: res.data[0].name,
-          profilePicture: res.data[0].profile_picture,
-        });
-        setIsLoading(false);
-      } catch ({ response }) {
-        console.error(response);
-        alert(
-          "An error occurred while trying to fetch the posts, please refresh the page."
-        );
-      }
+      navigate("/timeline");
+      return;
     }
     getUserPosts();
-  }, []);
+  }, [id]);
 
   return (
     <MainPage
