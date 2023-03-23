@@ -1,14 +1,21 @@
-import { SessionContext } from "../../../hooks/SessionContext.jsx";
-import { BsSend } from "react-icons/bs";
-import { useContext, useEffect, useState } from "react";
-import * as S from "./styles.js";
-import PostContext from "../../../hooks/PostContext.jsx";
-import api from "../../../config/api.js";
 import LoadingCommentsSpinner from "../../LoadingCommentsSpinner.jsx";
+import { SessionContext } from "../../../hooks/SessionContext.jsx";
+import PostContext from "../../../hooks/PostContext.jsx";
+import { useContext, useEffect, useState } from "react";
+import API from "../../../config/api.js";
+import { BsSend } from "react-icons/bs";
+import * as S from "./styles.js";
+import Joi from "joi";
+
+const schema = Joi.object({
+  message: Joi.string().min(1).required(),
+  post_id: Joi.number().positive().integer().required(),
+});
 
 export default function CommentSection({showComments}) {
   const { num_comments, id, user_id } = useContext(PostContext);
   const [commentsList, setCommentsList] = useState([]);
+  const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
 
@@ -18,10 +25,23 @@ export default function CommentSection({showComments}) {
     }
   }, [showComments]);
 
+  async function submit() {
+    try {
+      const data = { message: comment, post_id: id };
+      const { error } = schema.validate(data);
+      if (error) return;
+
+      await API.post("/comment", data, session.auth);
+      setComment("");
+    } catch ({ response }) {
+      console.log(response);
+    }
+  }
+
   async function searchComments() {
     try {
       setIsLoading(true);
-      const res = (await api.get(`/post/${id}/comments`, session.auth)).data;
+      const res = (await API.get(`/post/${id}/comments`, session.auth)).data;
       console.log(res);
       setCommentsList(res);
       setIsLoading(false);
@@ -66,8 +86,8 @@ export default function CommentSection({showComments}) {
         <S.Comment>
           <S.UserPicture src={session.user.profilePicture} />
           <S.InputContainer>
-            <S.Input placeholder="write a comment..." />
-            <BsSend />
+            <S.Input type="text" placeholder="write a comment..." value={comment} onChange={(e) => setComment(e.target.value)}/>
+            <BsSend onClick={submit} />
           </S.InputContainer>
         </S.Comment>
       </S.List>}
