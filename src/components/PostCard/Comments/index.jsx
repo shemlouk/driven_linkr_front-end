@@ -6,6 +6,7 @@ import API from "../../../config/api.js";
 import { BsSend } from "react-icons/bs";
 import * as S from "./styles.js";
 import Joi from "joi";
+import { Oval } from "react-loader-spinner";
 
 const schema = Joi.object({
   message: Joi.string().min(1).required(),
@@ -15,9 +16,10 @@ const schema = Joi.object({
 export default function CommentSection(props) {
   const { showComments, commentsList, setCommentsList, setNumberComments } = props;
   const { num_comments, id, user_id } = useContext(PostContext);
-  const [comment, setComment] = useState("");
+  const [sendingComment, setSendingComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     if(showComments && num_comments) {
@@ -27,9 +29,13 @@ export default function CommentSection(props) {
 
   async function submit() {
     try {
+      setSendingComment(true);
       const data = { message: comment, post_id: id };
       const { error } = schema.validate(data);
-      if (error) return;
+      if (error) {
+        setSendingComment(false);
+        return;
+      }
 
       await API.post("/comment", data, session.auth);
       
@@ -42,8 +48,10 @@ export default function CommentSection(props) {
         ...data
       }]);
       setComment("");
+      setSendingComment(false);
     } catch ({ response }) {
       console.log(response);
+      setSendingComment(false);
     }
   }
 
@@ -96,7 +104,20 @@ export default function CommentSection(props) {
           <S.UserPicture src={session.user.profilePicture} />
           <S.InputContainer>
             <S.Input type="text" placeholder="write a comment..." value={comment} onChange={(e) => setComment(e.target.value)}/>
-            <BsSend onClick={submit} />
+            {sendingComment ?
+              <Oval
+                height={19}
+                width={19}
+                color="#fff"
+                visible={true}
+                ariaLabel='oval-loading'
+                secondaryColor="#565656"
+                strokeWidth={2}
+                strokeWidthSecondary={4}
+              />
+              :
+              <BsSend onClick={submit}
+            />}
           </S.InputContainer>
         </S.Comment>
       </S.List>}
