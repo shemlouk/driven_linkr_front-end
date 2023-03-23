@@ -10,7 +10,6 @@ import "../../../assets/tooltip.css";
 import * as S from "./styles";
 
 const LeftSide = ({showComments, setShowComments}) => {
-  console.log(showComments);
   const { profilePicture, profile_picture, likes_count, likes_names, num_comments, id } =
     useContext(PostContext);
   const [isLoading, setIsLoading] = useState(false);
