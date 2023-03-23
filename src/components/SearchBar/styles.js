@@ -71,8 +71,14 @@ export const SearchItem = styled.li`
     font-size: 19px;
     line-height: 23px;
     color: #515151;
-    :hover {
-      text-decoration: underline;
+
+    ::after {
+      display: ${({ showFollowing }) => !showFollowing && "none"};
+      content: "• following";
+      margin-left: 8px;
+      color: #c5c5c5;
+      font-size: 19px;
+      line-height: 23px;
     }
   }
 
