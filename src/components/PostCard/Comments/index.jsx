@@ -12,9 +12,9 @@ const schema = Joi.object({
   post_id: Joi.number().positive().integer().required(),
 });
 
-export default function CommentSection({showComments}) {
+export default function CommentSection(props) {
+  const { showComments, commentsList, setCommentsList, setNumberComments } = props;
   const { num_comments, id, user_id } = useContext(PostContext);
-  const [commentsList, setCommentsList] = useState([]);
   const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
@@ -32,6 +32,15 @@ export default function CommentSection({showComments}) {
       if (error) return;
 
       await API.post("/comment", data, session.auth);
+      
+      setNumberComments(commentsList.length + 1);
+      setCommentsList([...commentsList, {
+        id: session.user.id,
+        name: session.user.name,
+        profile_picture: session.user.profilePicture,
+        user_id: session.user.id,
+        ...data
+      }]);
       setComment("");
     } catch ({ response }) {
       console.log(response);
@@ -54,7 +63,7 @@ export default function CommentSection({showComments}) {
   function returnStatusText(comment) {
     let status = "";
 
-    if(session.user.network.includes(comment.name)) status = " • following";
+    if(session.user.network.includes(comment.user_id)) status = " • following";
     if(comment.user_id === user_id) status = " • post’s author";
 
     return status;
@@ -70,8 +79,8 @@ export default function CommentSection({showComments}) {
             <LoadingCommentsSpinner />
           </S.Comment>
           :
-          commentsList.map((c) => {
-            return (<S.Comment key={c.id}>
+          commentsList.map((c, i) => {
+            return (<S.Comment key={i}>
               <S.UserPicture src={c.profile_picture} />
               <S.MessageContainer>
                 <div>

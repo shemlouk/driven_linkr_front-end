@@ -7,15 +7,22 @@ import { useState } from "react";
 
 const PostCard = (props) => {
   const [showComments, setShowComments] = useState(false);
+  const [numberComments, setNumberComments] = useState(props.num_comments);
+  const [commentsList, setCommentsList] = useState([]);
 
   return (
     <PostContext.Provider value={props}>
       <S.Post>
         <S.Container data-test="post">
-          <LeftSide showComments={showComments} setShowComments={setShowComments} />
+          <LeftSide showComments={showComments} setShowComments={setShowComments} numberComments={numberComments} />
           <RightSide />
         </S.Container>
-        <CommentSection showComments={showComments} />
+        <CommentSection
+          showComments={showComments}
+          commentsList={commentsList}
+          setCommentsList={setCommentsList}
+          setNumberComments={setNumberComments}
+        />
       </S.Post>
     </PostContext.Provider>
   );
