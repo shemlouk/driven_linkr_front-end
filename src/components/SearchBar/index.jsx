@@ -12,6 +12,7 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const containerRef = useRef();
+  const inputRef = useRef();
   const {
     session: { user },
   } = useContext(SessionContext);
@@ -46,9 +47,13 @@ const SearchBar = () => {
   }, []);
 
   return (
-    <S.Container ref={containerRef}>
+    <S.Container
+      ref={containerRef}
+      onClick={() => searchForUser(inputRef.current.state.value)}
+    >
       <DebounceInput
         minLength={3}
+        ref={inputRef}
         data-test="search"
         debounceTimeout={300}
         placeholder="Search for people"
@@ -67,7 +72,13 @@ const SearchBar = () => {
             </S.SearchItem>
           ) : (
             users.map((user) => (
-              <S.SearchItem key={user.id} showFollowing={user.isFollowing}>
+              <S.SearchItem
+                key={user.id}
+                showFollowing={user.isFollowing}
+                onClick={() => {
+                  inputRef.current.state.value = "";
+                }}
+              >
                 <Link to={`/user/${user.id}`} data-test="user-search">
                   <img src={user.profilePicture} />
                   <span>{user.name}</span>

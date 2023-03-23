@@ -1,28 +1,29 @@
 import LoadingPostsSpinner from "../../components/LoadingPostsSpinner";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import ButtonSpinner from "../../components/ButtonSpinner";
-import { useCallback, useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Trending from "../Trending/index";
 import Header from "../Header/index";
 import API from "../../config/api";
 import * as S from "./styles";
 
 const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
-  const [_, path, params] = useLocation().pathname.split("/");
+  const [_, path] = useLocation().pathname.split("/");
+  const { id } = useParams();
   const {
     updateSession,
     session: { user, auth },
   } = useContext(SessionContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isFollowing, setIsFollowing] = useState(
-    user.network.includes(Number(params))
+    user.network.includes(Number(id))
   );
 
   const handleClick = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data } = await API.post(`/user/network/${params}`, {}, auth);
+      const { data } = await API.post(`/user/network/${id}`, {}, auth);
 
       user.network = data.ids ?? [];
       updateSession({ user, auth });
@@ -37,6 +38,12 @@ const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
     }
   });
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (path !== "user") return;
+    setIsFollowing(user.network.includes(Number(id)));
+  }, [id]);
+
   return (
     <>
       <Header />
@@ -48,7 +55,7 @@ const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
                 {path === "user" && <S.ProfilePicture src={profilePicture} />}
                 <h1>{title}</h1>
               </div>
-              {params != user.id && (
+              {id != user.id && (
                 <S.FollowButton
                   disabled={isLoading}
                   onClick={handleClick}
