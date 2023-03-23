@@ -37,6 +37,7 @@ const UserPage = () => {
       navigate("/timeline");
       return;
     }
+    window.scrollTo(0, 0);
     getUserPosts();
   }, [id]);
 
