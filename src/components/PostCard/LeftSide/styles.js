@@ -15,14 +15,16 @@ export const Container = styled.div`
   }
 
   div {
-    width: 50px;
+    width: 60px;
     font-size: 2em;
     color: #ffffff;
     text-align: center;
 
     svg {
       width: 22px;
-      color: ${({ isLiked }) => isLiked && "#AC0000"};
+      &.heart{
+        color: ${({ isLiked }) => isLiked && "#AC0000"};
+      }
     }
 
     p {
