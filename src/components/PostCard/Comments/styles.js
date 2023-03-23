@@ -73,8 +73,13 @@ export const InputContainer = styled.div`
 `;
 
 export const Input = styled.input`
+    font-family: "Lato", sans-serif;
     color: #575757;
     background-color: transparent;
     padding-left: 15px;
     width: 100%;
+
+    ::placeholder {
+        font-style: italic;
+    }
 `;
