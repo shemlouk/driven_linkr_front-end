@@ -11,6 +11,7 @@ import Trending from "../../layouts/Trending";
 import ReactModal from "react-modal";
 import API from "../../config/api";
 import * as P from "./styles";
+import InfiniteScroll from "react-infinite-scroller";
 
 const customStyles = {
   overlay: {
@@ -41,27 +42,30 @@ const Timeline = () => {
   const navigate = useNavigate();
   const { session } = useContext(SessionContext);
   const { setHashtag } = useContext(HashtagContext);
-  const { updateList, setUpdateList } = useContext(PublishContext);
   const [isLoading, setIsLoading] = useState(true);
   const [postList, setPostList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deletePostId, setDeletePostId] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
 
-  useEffect(() => {
-    getPosts();
-  }, [updateList]);
 
   async function getPosts() {
     try {
       let res;
       if (!session) {
-        res = await API.get(`/timeline`);
+        res = await API.get(`/timeline?offset=${offset}`);
       } else {
-        res = await API.get(`/timeline`, session.auth);
+        res = await API.get(`/timeline?offset=${offset}`, session.auth);
       }
-      setPostList(res.data);
-      setUpdateList(false);
+
+      if (res.data.length === 0) {
+        setHasMore(false)
+      }   
+
+      setPostList([...postList, ...res.data]);
+      setOffset(offset + 10)
       setIsLoading(false);
     } catch ({ response }) {
       alert(
@@ -119,23 +123,31 @@ const Timeline = () => {
             <P.TitleBox>timeline</P.TitleBox>
             <P.ContentWrapper>
               <P.PostWrapper>
-                {session ? <WritePost getPosts={getPosts} /> : null}
-                <P.PostListing>
-                  {isLoading ? (
-                    <P.SpecialMessage>Loading...</P.SpecialMessage>
-                  ) : postList.length > 0 ? (
-                    postList.map((post) => (
-                      <PostCard
-                        key={post.id}
-                        {...{ ...post, openModal, selectHashtag }}
-                      />
-                    ))
-                  ) : (
-                    <P.SpecialMessage data-test="message">
-                      There are no posts yet
-                    </P.SpecialMessage>
-                  )}
-                </P.PostListing>
+                <InfiniteScroll
+                  key={offset}
+                  pageStart={0}
+                  loadMore={getPosts}
+                  hasMore={hasMore}
+                  loader={<P.SpecialMessage>Loading...</P.SpecialMessage>}
+                >
+                  {session ? <WritePost/> : null}
+                  <P.PostListing>
+                    {isLoading ? (
+                      <></>
+                    ) : postList.length > 0 ? (
+                      postList.map((post) => (
+                        <PostCard
+                          key={post.id}
+                          {...{ ...post, openModal, selectHashtag }}
+                        />
+                      ))
+                    ) : (
+                      <P.SpecialMessage data-test="message">
+                        There are no posts yet
+                      </P.SpecialMessage>
+                    )}
+                  </P.PostListing>
+                </InfiniteScroll>
               </P.PostWrapper>
               {session ? <Trending /> : null}
             </P.ContentWrapper>
