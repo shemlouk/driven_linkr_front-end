@@ -5,6 +5,7 @@ import ButtonSpinner from "../../components/ButtonSpinner";
 import { useLocation, useParams } from "react-router-dom";
 import WritePost from "../../layouts/WritePostBox/index";
 import InfiniteScroll from "react-infinite-scroller";
+import { Oval } from "react-loader-spinner";
 import Trending from "../Trending/index";
 import Header from "../Header/index";
 import API from "../../config/api";
@@ -53,6 +54,13 @@ const MainPage = ({
     setIsFollowing(user.network.includes(Number(id)));
   }, [id]);
 
+  const noPostsMessage =
+    path === "timeline"
+      ? !user.network.length
+        ? "You don't follow anyone yet. Search for new friends!"
+        : "No posts found from your friends"
+      : "There are no posts yet.";
+
   return (
     <>
       <Header />
@@ -95,12 +103,29 @@ const MainPage = ({
                   pageStart={0}
                   hasMore={hasMore}
                   loadMore={loadMoreFunction}
-                  loader={<S.SpecialMessage>Loading...</S.SpecialMessage>}
+                  loader={
+                    <S.LoadingMorePostsContainer>
+                      <Oval
+                        height={36}
+                        width={36}
+                        color="#6d6d6d"
+                        visible={true}
+                        ariaLabel="oval-loading"
+                        secondaryColor="#6d6d6d"
+                        strokeWidth={4}
+                        strokeWidthSecondary={4}
+                      />
+                      <S.LoadingMessage>
+                        {" "}
+                        Loading more posts...
+                      </S.LoadingMessage>
+                    </S.LoadingMorePostsContainer>
+                  }
                 >
                   {children ? (
                     children
                   ) : (
-                    <S.SpecialMessage>There are no posts yet.</S.SpecialMessage>
+                    <S.SpecialMessage>{noPostsMessage}</S.SpecialMessage>
                   )}
                 </InfiniteScroll>
               </S.PostListing>
