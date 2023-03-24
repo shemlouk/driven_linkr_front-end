@@ -3,19 +3,29 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import ButtonSpinner from "../../components/ButtonSpinner";
 import { useLocation, useParams } from "react-router-dom";
+import WritePost from "../../layouts/WritePostBox/index";
+import InfiniteScroll from "react-infinite-scroller";
 import Trending from "../Trending/index";
 import Header from "../Header/index";
 import API from "../../config/api";
 import * as S from "./styles";
 
-const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
+const MainPage = ({
+  loadMoreFunction,
+  postsAreLoading,
+  profilePicture,
+  children,
+  hasMore,
+  offset,
+  title,
+}) => {
   const [_, path] = useLocation().pathname.split("/");
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const {
     updateSession,
     session: { user, auth },
   } = useContext(SessionContext);
-  const [isLoading, setIsLoading] = useState(false);
   const [isFollowing, setIsFollowing] = useState(
     user.network.includes(Number(id))
   );
@@ -29,13 +39,12 @@ const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
       updateSession({ user, auth });
       localStorage.session = JSON.stringify({ user, auth });
 
-      setIsLoading(false);
       setIsFollowing(!isFollowing);
     } catch ({ response }) {
-      setIsLoading(false);
       console.error(response);
       alert("Could not follow/unfollow!");
     }
+    setIsLoading(false);
   });
 
   useEffect(() => {
@@ -55,7 +64,7 @@ const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
                 {path === "user" && <S.ProfilePicture src={profilePicture} />}
                 <h1>{title}</h1>
               </div>
-              {id != user.id && (
+              {id != user.id && path === "user" && (
                 <S.FollowButton
                   disabled={isLoading}
                   onClick={handleClick}
@@ -79,12 +88,21 @@ const MainPage = ({ children, title, postsAreLoading, profilePicture }) => {
             <LoadingPostsSpinner />
           ) : (
             <S.PostWrapper>
+              {path === "timeline" && user && <WritePost />}
               <S.PostListing>
-                {children ? (
-                  children
-                ) : (
-                  <S.SpecialMessage>There are no posts yet.</S.SpecialMessage>
-                )}
+                <InfiniteScroll
+                  key={offset}
+                  pageStart={0}
+                  hasMore={hasMore}
+                  loadMore={loadMoreFunction}
+                  loader={<S.SpecialMessage>Loading...</S.SpecialMessage>}
+                >
+                  {children ? (
+                    children
+                  ) : (
+                    <S.SpecialMessage>There are no posts yet.</S.SpecialMessage>
+                  )}
+                </InfiniteScroll>
               </S.PostListing>
             </S.PostWrapper>
           )}
