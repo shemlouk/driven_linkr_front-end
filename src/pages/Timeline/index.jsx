@@ -1,55 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import { SessionContext } from "../../hooks/SessionContext";
-import { PublishContext } from "../../hooks/PublishContext";
-import WritePost from "../../layouts/WritePostBox/index";
 import HashtagContext from "../../hooks/HashtagContext";
 import PostCard from "../../components/PostCard/index";
-import Header from "../../layouts/Header/index";
+import React, { useState, useContext } from "react";
+import MainPage from "../../layouts/MainPage/index";
 import { useNavigate } from "react-router-dom";
-import Trending from "../../layouts/Trending";
-import ReactModal from "react-modal";
+import Modal from "../../components/Modal";
 import API from "../../config/api";
-import * as P from "./styles";
-import InfiniteScroll from "react-infinite-scroller";
-
-const customStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    zIndex: 5,
-    display: "flex",
-  },
-  content: {
-    display: "flex",
-    width: "600px",
-    height: "262px",
-    backgroundColor: "#333333",
-    borderRadius: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
-  },
-};
-
-ReactModal.setAppElement("#root");
 
 const Timeline = () => {
-  const navigate = useNavigate();
-  const { session } = useContext(SessionContext);
-  const { setHashtag } = useContext(HashtagContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [postList, setPostList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletePostId, setDeletePostId] = useState();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [offset, setOffset] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
-
+  const { setHashtag } = useContext(HashtagContext);
+  const { session } = useContext(SessionContext);
+  const [postList, setPostList] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const navigate = useNavigate();
 
   async function getPosts() {
     try {
@@ -61,13 +27,13 @@ const Timeline = () => {
       }
 
       if (res.data.length === 0) {
-        setHasMore(false)
+        setHasMore(false);
       }
 
       setPostList([...postList, ...res.data]);
-      setOffset(offset + 10)
-      setIsLoading(false);
+      setOffset(offset + 10);
     } catch ({ response }) {
+      console.error(response);
       alert(
         "An error occurred while trying to fetch the posts, please refresh the page."
       );
@@ -89,97 +55,45 @@ const Timeline = () => {
     }
   }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
-
-  function openModal(id) {
-    setIsModalOpen(true);
+  function openDeleteModal(id) {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
     setDeletePostId(id);
   }
 
-  async function deletePost(id) {
-    setIsDeleting(true);
+  async function deletePost(postId) {
     try {
-      await API.delete(`/user/post/${id}`, session.auth);
-      const newPostList = postList.filter((post) => post.id !== id);
+      await API.delete(`/user/post/${postId}`, session.auth);
+      const newPostList = postList.filter((post) => post.id !== postId);
       setPostList(newPostList);
-    } catch (response) {
+    } catch ({ response }) {
       console.error(response);
       alert("An error occurred while trying to delete your post");
     }
-    setIsDeleting(false);
-    setIsModalOpen(false);
   }
 
   return (
     <>
-      {isDeleting ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <Header />
-          <P.PageContainer>
-            <P.TitleBox>timeline</P.TitleBox>
-            <P.ContentWrapper>
-              <P.PostWrapper>
-                <InfiniteScroll
-                  key={offset}
-                  pageStart={0}
-                  loadMore={getPosts}
-                  hasMore={hasMore}
-                  loader={<P.SpecialMessage>Loading...</P.SpecialMessage>}
-                >
-                  {session ? <WritePost /> : null}
-                  <P.PostListing>
-                    {isLoading ? (
-                      <></>
-                    ) : postList.length > 0 ? (
-                      postList.map((post) => (
-                        <PostCard
-                          key={post.id}
-                          {...{ ...post, openModal, selectHashtag }}
-                        />
-                      ))
-                    ) : (
-                      <P.SpecialMessage data-test="message">
-                        There are no posts yet
-                      </P.SpecialMessage>
-                    )}
-                  </P.PostListing>
-                </InfiniteScroll>
-              </P.PostWrapper>
-              {session ? <Trending /> : null}
-            </P.ContentWrapper>
-          </P.PageContainer>
-          <ReactModal
-            isOpen={isModalOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-          >
-            <P.OverlayBox>
-              <p>Are you sure you want to delete this post?</p>
-              <div>
-                <button
-                  data-test="cancel"
-                  className="no-btn"
-                  onClick={closeModal}
-                >
-                  No, go back
-                </button>
-                <button
-                  data-test="confirm"
-                  className="yes-btn"
-                  onClick={() => deletePost(deletePostId)}
-                >
-                  Yes, delete it
-                </button>
-              </div>
-            </P.OverlayBox>
-          </ReactModal>
-        </>
-      )}
-      ;
+      <MainPage
+        title="timeline"
+        {...{ offset, hasMore }}
+        loadMoreFunction={getPosts}
+      >
+        {postList.length > 0 &&
+          postList.map((post) => (
+            <PostCard
+              key={post.id}
+              {...{ ...post, openDeleteModal, selectHashtag }}
+            />
+          ))}
+      </MainPage>
+      <Modal
+        id={deletePostId}
+        toggle={isDeleteModalOpen}
+        cancelButtonText="No, go back"
+        approveButtonText="Yes, delete it"
+        approveButtonFunction={deletePost}
+        modalText="Are you sure you want to delete this post?"
+      />
     </>
   );
 };
