@@ -62,7 +62,7 @@ const Timeline = () => {
 
       if (res.data.length === 0) {
         setHasMore(false)
-      }   
+      }
 
       setPostList([...postList, ...res.data]);
       setOffset(offset + 10)
@@ -130,7 +130,7 @@ const Timeline = () => {
                   hasMore={hasMore}
                   loader={<P.SpecialMessage>Loading...</P.SpecialMessage>}
                 >
-                  {session ? <WritePost/> : null}
+                  {session ? <WritePost /> : null}
                   <P.PostListing>
                     {isLoading ? (
                       <></>
