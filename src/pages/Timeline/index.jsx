@@ -1,44 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import { SessionContext } from "../../hooks/SessionContext";
-import { PublishContext } from "../../hooks/PublishContext";
-import WritePost from "../../layouts/WritePostBox/index";
 import HashtagContext from "../../hooks/HashtagContext";
 import PostCard from "../../components/PostCard/index";
-import Header from "../../layouts/Header/index";
 import { useNavigate } from "react-router-dom";
 import Trending from "../../layouts/Trending";
-import ReactModal from "react-modal";
 import API from "../../config/api";
-import * as P from "./styles";
-import InfiniteScroll from "react-infinite-scroller";
 import { useInterval } from "@react-hooks-library/core"
 import LoadPostBox from "../../components/LoadPostsBox";
-
-const customStyles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    zIndex: 5,
-    display: "flex",
-  },
-  content: {
-    display: "flex",
-    width: "600px",
-    height: "262px",
-    backgroundColor: "#333333",
-    borderRadius: "50px",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
-  },
-};
-
-ReactModal.setAppElement("#root");
 
 const Timeline = () => {
   const navigate = useNavigate();
