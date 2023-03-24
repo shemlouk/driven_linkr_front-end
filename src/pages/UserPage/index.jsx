@@ -4,9 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import PostCard from "../../components/PostCard/index";
 import MainPage from "../../layouts/MainPage/index";
 import API from "../../config/api";
+import HashtagContext from "../../hooks/HashtagContext";
 
 const UserPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { setHashtag } = useContext(HashtagContext);
   const { session } = useContext(SessionContext);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState("");
@@ -32,6 +34,21 @@ const UserPage = () => {
     }
   });
 
+  async function selectHashtag(hashtag) {
+    hashtag = hashtag.replace("#", "");
+
+    try {
+      const res = (await API.get(`/hashtag/search/${hashtag}`, session.auth))
+        .data;
+      setHashtag({
+        ...res,
+      });
+      navigate(`/hashtag/${hashtag}`);
+    } catch (error) {
+      console.error(`selectHashtag: ${error}`);
+    }
+  }
+
   useEffect(() => {
     if (!session) {
       navigate("/timeline");
@@ -48,7 +65,7 @@ const UserPage = () => {
       title={user && user.username + "' posts"}
     >
       {postList.length > 0 &&
-        postList.map((post) => <PostCard key={post.id} {...post} />)}
+        postList.map((post) => <PostCard key={post.id} {...{...post, selectHashtag}} />)}
     </MainPage>
   );
 };
