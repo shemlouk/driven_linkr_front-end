@@ -11,6 +11,7 @@ const Timeline = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletePostId, setDeletePostId] = useState();
   const { setHashtag } = useContext(HashtagContext);
+  const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
   const [postList, setPostList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -18,6 +19,9 @@ const Timeline = () => {
   const navigate = useNavigate();
 
   async function getPosts() {
+    if (!postList.length) {
+      setIsLoading(true);
+    }
     try {
       let res;
       if (!session) {
@@ -38,6 +42,7 @@ const Timeline = () => {
         "An error occurred while trying to fetch the posts, please refresh the page."
       );
     }
+    setIsLoading(false);
   }
 
   async function selectHashtag(hashtag) {
@@ -77,6 +82,7 @@ const Timeline = () => {
         title="timeline"
         {...{ offset, hasMore }}
         loadMoreFunction={getPosts}
+        postsAreLoading={isLoading}
       >
         {postList.length > 0 &&
           postList.map((post) => (
