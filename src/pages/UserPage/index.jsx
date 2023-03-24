@@ -42,9 +42,10 @@ const UserPage = () => {
 
   return (
     <MainPage
-      title={user && user.username + "' posts"}
-      profilePicture={user.profilePicture}
       postsAreLoading={isLoading}
+      loadMoreFunction={getUserPosts}
+      profilePicture={user.profilePicture}
+      title={user && user.username + "' posts"}
     >
       {postList.length > 0 &&
         postList.map((post) => <PostCard key={post.id} {...post} />)}
