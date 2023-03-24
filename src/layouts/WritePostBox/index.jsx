@@ -1,7 +1,7 @@
 import { PublishContext } from "../../hooks/PublishContext";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import API from "../../config/api";
 import * as W from "./styles";
 
@@ -10,7 +10,7 @@ const WritePost = () => {
 
   const navigate = useNavigate();
   const { session } = useContext(SessionContext);
-  const { setUpdateList } = useContext(PublishContext);
+  const { updateList, setUpdateList } = useContext(PublishContext);
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState({
     url: "",
@@ -41,7 +41,7 @@ const WritePost = () => {
         url: "",
         description: "",
       });
-      setUpdateList(true);
+      setUpdateList(!updateList);
       navigate("/timeline");
     } catch (error) {
       console.log(error);
@@ -49,6 +49,9 @@ const WritePost = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+  }, [updateList]);
 
   const saveHashtags = async () => {
     try {
