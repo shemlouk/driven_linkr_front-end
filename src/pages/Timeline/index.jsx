@@ -1,62 +1,54 @@
-import React, { useState, useEffect, useContext } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import HashtagContext from "../../hooks/HashtagContext";
 import PostCard from "../../components/PostCard/index";
+import React, { useState, useContext, useEffect } from "react";
+import MainPage from "../../layouts/MainPage/index";
 import { useNavigate } from "react-router-dom";
-import Trending from "../../layouts/Trending";
+import Modal from "../../components/Modal";
 import API from "../../config/api";
 import { useInterval } from "@react-hooks-library/core"
-import LoadPostBox from "../../components/LoadPostsBox";
 
 const Timeline = () => {
-  const navigate = useNavigate();
-  const { session } = useContext(SessionContext);
-  const { setHashtag } = useContext(HashtagContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [postList, setPostList] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletePostId, setDeletePostId] = useState();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [offset, setOffset] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
+  const { setHashtag } = useContext(HashtagContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const { session } = useContext(SessionContext);
+  const [postList, setPostList] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
   const [allPosts, setAllPosts] = useState([])
   const [hasMorePosts, setHasMorePosts] = useState(false)
   const [newPosts, setNewPosts] = useState([])
   const [postCount, setPostCount] = useState(0)
-
-
+  const navigate = useNavigate();
 
   async function getPosts() {
+    if (!postList.length) {
+      setIsLoading(true);
+    }
     try {
-      let res;
-      if (!session) {
-        res = await API.get(`/timeline?offset=${offset}`);
-      } else {
-        res = await API.get(`/timeline?offset=${offset}`, session.auth);
-      }
+      const res = await API.get(`/timeline?offset=${offset}`, session.auth);
 
       if (res.data.length === 0) {
-        setHasMore(false)
+        setHasMore(false);
       }
 
       setPostList([...postList, ...res.data]);
-      setOffset(offset + 10)
-      setIsLoading(false);
+      setOffset(offset + 10);
     } catch ({ response }) {
+      console.error(response);
       alert(
         "An error occurred while trying to fetch the posts, please refresh the page."
       );
     }
+    setIsLoading(false);
   }
 
   async function getAllPosts() {
     try {
-      let res;
-      if (!session) {
-        res = await API.get(`/timeline/posts`);
-      } else {
-        res = await API.get(`/timeline/posts`, session.auth);
-      }
+      const res = await API.get(`/timeline/posts`, session.auth);
+
       setAllPosts(res.data)
       console.log(res.data.length)
     } catch ({ response }) {
@@ -66,23 +58,18 @@ const Timeline = () => {
     }
   }
 
-  useEffect (() => {
+  useEffect(() => {
     getAllPosts()
   }, [])
-  
+
   useInterval(checkNewPosts, 15000)
 
   async function checkNewPosts() {
     try {
-      let res;
-      if (!session) {
-        res = await API.get(`/timeline/posts`);
-      } else {
-        res = await API.get(`/timeline/posts`, session.auth);
-      }
+      const res = await API.get(`/timeline/posts`, session.auth);
       setNewPosts(res.data)
 
-      if(newPosts.length > allPosts.length) {
+      if (newPosts.length > allPosts.length) {
         setHasMorePosts(true)
         setAllPosts(newPosts)
       }
@@ -117,107 +104,49 @@ const Timeline = () => {
     }
   }
 
-  function closeModal() {
-    setIsModalOpen(false);
-  }
-
-  function openModal(id) {
-    setIsModalOpen(true);
+  function openDeleteModal(id) {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
     setDeletePostId(id);
   }
 
-  async function deletePost(id) {
-    setIsDeleting(true);
+  async function deletePost(postId) {
     try {
-      await API.delete(`/user/post/${id}`, session.auth);
-      const newPostList = postList.filter((post) => post.id !== id);
+      await API.delete(`/user/post/${postId}`, session.auth);
+      const newPostList = postList.filter((post) => post.id !== postId);
       setPostList(newPostList);
-    } catch (response) {
+    } catch ({ response }) {
       console.error(response);
       alert("An error occurred while trying to delete your post");
     }
-    setIsDeleting(false);
-    setIsModalOpen(false);
   }
 
   return (
     <>
-      {isDeleting ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <Header />
-          <P.PageContainer>
-            <P.TitleBox>timeline</P.TitleBox>
-            <P.ContentWrapper>
-              <P.PostWrapper>
-                <InfiniteScroll
-                  key={offset}
-                  pageStart={0}
-                  loadMore={getPosts}
-                  hasMore={hasMore}
-                  loader={<P.SpecialMessage>Loading...</P.SpecialMessage>}
-                >
-                  {session ?
-                    <WritePost
-                      checkNewPosts={checkNewPosts}
-                    />
-                  : null}
-                  {hasMorePosts ? 
-                  <LoadPostBox
-                    refreshPostList={refreshPostList}
-                    newPosts={postCount}
-                  /> 
-                : null}
-                  <P.PostListing>
-                    {isLoading ? (
-                      <></>
-                    ) : postList.length > 0 ? (
-                      postList.map((post) => (
-                        <PostCard
-                          key={post.id}
-                          {...{ ...post, openModal, selectHashtag }}
-                        />
-                      ))
-                    ) : (
-                      <P.SpecialMessage data-test="message">
-                        There are no posts yet
-                      </P.SpecialMessage>
-                    )}
-                  </P.PostListing>
-                </InfiniteScroll>
-              </P.PostWrapper>
-              {session ? <Trending /> : null}
-            </P.ContentWrapper>
-          </P.PageContainer>
-          <ReactModal
-            isOpen={isModalOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-          >
-            <P.OverlayBox>
-              <p>Are you sure you want to delete this post?</p>
-              <div>
-                <button
-                  data-test="cancel"
-                  className="no-btn"
-                  onClick={closeModal}
-                >
-                  No, go back
-                </button>
-                <button
-                  data-test="confirm"
-                  className="yes-btn"
-                  onClick={() => deletePost(deletePostId)}
-                >
-                  Yes, delete it
-                </button>
-              </div>
-            </P.OverlayBox>
-          </ReactModal>
-        </>
-      )}
-      ;
+      <MainPage
+        title="timeline"
+        {...{ offset, hasMore }}
+        loadMoreFunction={getPosts}
+        postsAreLoading={isLoading}
+        refreshPostList={refreshPostList}
+        hasMorePosts={hasMorePosts}
+        postCount={postCount}
+      >
+        {postList.length > 0 &&
+          postList.map((post) => (
+            <PostCard
+              key={post.id}
+              {...{ ...post, openDeleteModal, selectHashtag }}
+            />
+          ))}
+      </MainPage>
+      <Modal
+        id={deletePostId}
+        toggle={isDeleteModalOpen}
+        cancelButtonText="No, go back"
+        approveButtonText="Yes, delete it"
+        approveButtonFunction={deletePost}
+        modalText="Are you sure you want to delete this post?"
+      />
     </>
   );
 };
