@@ -12,6 +12,8 @@ import ReactModal from "react-modal";
 import API from "../../config/api";
 import * as P from "./styles";
 import InfiniteScroll from "react-infinite-scroller";
+import { useInterval } from "@react-hooks-library/core"
+import LoadPostBox from "../../components/LoadPostsBox";
 
 const customStyles = {
   overlay: {
@@ -49,6 +51,11 @@ const Timeline = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [allPosts, setAllPosts] = useState([])
+  const [hasMorePosts, setHasMorePosts] = useState(false)
+  const [newPosts, setNewPosts] = useState([])
+  const [postCount, setPostCount] = useState(0)
+
 
 
   async function getPosts() {
@@ -72,6 +79,59 @@ const Timeline = () => {
         "An error occurred while trying to fetch the posts, please refresh the page."
       );
     }
+  }
+
+  async function getAllPosts() {
+    try {
+      let res;
+      if (!session) {
+        res = await API.get(`/timeline/posts`);
+      } else {
+        res = await API.get(`/timeline/posts`, session.auth);
+      }
+      setAllPosts(res.data)
+      console.log(res.data.length)
+    } catch ({ response }) {
+      alert(
+        "An error occurred while trying to fetch the posts, please refresh the page."
+      );
+    }
+  }
+
+  useEffect (() => {
+    getAllPosts()
+  }, [])
+  
+  useInterval(checkNewPosts, 15000)
+
+  async function checkNewPosts() {
+    try {
+      let res;
+      if (!session) {
+        res = await API.get(`/timeline/posts`);
+      } else {
+        res = await API.get(`/timeline/posts`, session.auth);
+      }
+      setNewPosts(res.data)
+
+      if(newPosts.length > allPosts.length) {
+        setHasMorePosts(true)
+        setAllPosts(newPosts)
+      }
+
+      const newPostCount = (newPosts.length - allPosts.length)
+      setPostCount(newPostCount)
+    } catch ({ response }) {
+      console.log(response)
+    }
+  }
+
+  async function refreshPostList() {
+    setOffset(0)
+    setPostList([])
+    setIsLoading(true)
+    setHasMorePosts(false)
+    await getPosts()
   }
 
   async function selectHashtag(hashtag) {
@@ -130,7 +190,17 @@ const Timeline = () => {
                   hasMore={hasMore}
                   loader={<P.SpecialMessage>Loading...</P.SpecialMessage>}
                 >
-                  {session ? <WritePost /> : null}
+                  {session ?
+                    <WritePost
+                      checkNewPosts={checkNewPosts}
+                    />
+                  : null}
+                  {hasMorePosts ? 
+                  <LoadPostBox
+                    refreshPostList={refreshPostList}
+                    newPosts={postCount}
+                  /> 
+                : null}
                   <P.PostListing>
                     {isLoading ? (
                       <></>
