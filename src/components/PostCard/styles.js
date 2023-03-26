@@ -8,10 +8,6 @@ export const Post = styled.div`
   margin-bottom: 33px;
   border-radius: 16px;
   margin-top: ${({ isRepost }) => isRepost && "66px"};
-
-  :first-of-type {
-    margin-top: 33px;
-  }
 `;
 
 export const Container = styled.div`
