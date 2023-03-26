@@ -20,11 +20,16 @@ export const ModalContextProvider = ({ children }) => {
     setPostId(id);
   };
 
-  const repostPost = () => {
-    alert("teste repost");
+  const repostPost = async () => {
+    try {
+      await API.post(`/repost/${postId}`, {}, session.auth);
+    } catch ({ response }) {
+      console.error(response);
+      alert("An error occurred while trying to re-post");
+    }
   };
 
-  async function deletePost(postId) {
+  async function deletePost() {
     try {
       await API.delete(`/user/post/${postId}`, session.auth);
       setIdDeleted(postId);
