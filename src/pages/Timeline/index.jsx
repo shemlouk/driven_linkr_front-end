@@ -74,7 +74,10 @@ const Timeline = () => {
       >
         {postList.length > 0 &&
           postList.map((post) => (
-            <PostCard key={post.id} {...{ ...post, selectHashtag }} />
+            <PostCard
+              key={!post.rb_user_id ? post.id : post.id + "r" + post.rb_user_id}
+              {...{ ...post, selectHashtag }}
+            />
           ))}
       </MainPage>
     </>
