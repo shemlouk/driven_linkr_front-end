@@ -101,15 +101,19 @@ const LeftSide = ({
         </div>
         <div>
           <AiOutlineComment
+            data-test="comment-btn"
             onClick={() => {
               setShowComments(!showComments);
             }}
           />
-          <p>{`${numberComments || 0} comments`}</p>
+          <p data-test="comment-counter">{`${numberComments || 0} comments`}</p>
         </div>
         <div>
-          <BiRepost onClick={() => openModal(id, "repost")} />
-          <p>{`${numberReposts || 0} re-posts`}</p>
+          <BiRepost
+            data-test="repost-btn"
+            onClick={() => openModal(id, "repost")}
+          />
+          <p data-test="repost-counter">{`${numberReposts || 0} re-posts`}</p>
         </div>
       </S.ButtonsContainer>
     </S.Container>

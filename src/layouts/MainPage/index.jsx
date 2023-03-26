@@ -76,6 +76,7 @@ const MainPage = ({
                 <S.FollowButton
                   disabled={isLoading}
                   onClick={handleClick}
+                  data-test="follow-btn"
                   whiteMode={isFollowing}
                 >
                   {isLoading && (
@@ -115,17 +116,14 @@ const MainPage = ({
                         strokeWidth={4}
                         strokeWidthSecondary={4}
                       />
-                      <S.LoadingMessage>
-                        {" "}
-                        Loading more posts...
-                      </S.LoadingMessage>
+                      <S.LoadingMessage>Loading more posts...</S.LoadingMessage>
                     </S.LoadingMorePostsContainer>
                   }
                 >
                   {children ? (
                     children
                   ) : (
-                    <S.SpecialMessage key="no-posts">
+                    <S.SpecialMessage key="no-posts" data-test="message">
                       {noPostsMessage}
                     </S.SpecialMessage>
                   )}
