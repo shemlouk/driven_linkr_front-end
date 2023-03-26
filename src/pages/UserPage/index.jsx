@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
 import { useParams, useNavigate } from "react-router-dom";
+import HashtagContext from "../../hooks/HashtagContext";
+import { ModalContext } from "../../hooks/ModalContext";
 import PostCard from "../../components/PostCard/index";
 import MainPage from "../../layouts/MainPage/index";
 import API from "../../config/api";
-import HashtagContext from "../../hooks/HashtagContext";
 
 const UserPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setHashtag } = useContext(HashtagContext);
   const { session } = useContext(SessionContext);
+  const { idDeleted } = useContext(ModalContext);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState("");
   const navigate = useNavigate();
@@ -57,6 +59,11 @@ const UserPage = () => {
     getUserPosts();
   }, [id]);
 
+  useEffect(() => {
+    const newPostList = postList.filter((post) => post.id !== idDeleted);
+    setPostList(newPostList);
+  }, [idDeleted]);
+
   return (
     <MainPage
       postsAreLoading={isLoading}
@@ -65,7 +72,9 @@ const UserPage = () => {
       title={user && user.username + "' posts"}
     >
       {postList.length > 0 &&
-        postList.map((post) => <PostCard key={post.id} {...{...post, selectHashtag}} />)}
+        postList.map((post) => (
+          <PostCard key={post.id} {...{ ...post, selectHashtag }} />
+        ))}
     </MainPage>
   );
 };
