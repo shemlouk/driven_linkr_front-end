@@ -1,18 +1,17 @@
+import React, { useState, useContext, useEffect } from "react";
 import { SessionContext } from "../../hooks/SessionContext";
+import { ModalContext } from "../../hooks/ModalContext";
 import HashtagContext from "../../hooks/HashtagContext";
 import PostCard from "../../components/PostCard/index";
-import React, { useState, useContext } from "react";
 import MainPage from "../../layouts/MainPage/index";
 import { useNavigate } from "react-router-dom";
-import Modal from "../../components/Modal";
 import API from "../../config/api";
 
 const Timeline = () => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deletePostId, setDeletePostId] = useState();
   const { setHashtag } = useContext(HashtagContext);
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
+  const { idDeleted } = useContext(ModalContext);
   const [postList, setPostList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
@@ -60,21 +59,10 @@ const Timeline = () => {
     }
   }
 
-  function openDeleteModal(id) {
-    setIsDeleteModalOpen(!isDeleteModalOpen);
-    setDeletePostId(id);
-  }
-
-  async function deletePost(postId) {
-    try {
-      await API.delete(`/user/post/${postId}`, session.auth);
-      const newPostList = postList.filter((post) => post.id !== postId);
-      setPostList(newPostList);
-    } catch ({ response }) {
-      console.error(response);
-      alert("An error occurred while trying to delete your post");
-    }
-  }
+  useEffect(() => {
+    const newPostList = postList.filter((post) => post.id !== idDeleted);
+    setPostList(newPostList);
+  }, [idDeleted]);
 
   return (
     <>
@@ -87,19 +75,11 @@ const Timeline = () => {
         {postList.length > 0 &&
           postList.map((post) => (
             <PostCard
-              key={post.id}
-              {...{ ...post, openDeleteModal, selectHashtag }}
+              key={!post.rb_user_id ? post.id : post.id + "r" + post.rb_user_id}
+              {...{ ...post, selectHashtag }}
             />
           ))}
       </MainPage>
-      <Modal
-        id={deletePostId}
-        toggle={isDeleteModalOpen}
-        cancelButtonText="No, go back"
-        approveButtonText="Yes, delete it"
-        approveButtonFunction={deletePost}
-        modalText="Are you sure you want to delete this post?"
-      />
     </>
   );
 };

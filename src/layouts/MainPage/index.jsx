@@ -104,7 +104,7 @@ const MainPage = ({
                   hasMore={hasMore}
                   loadMore={loadMoreFunction}
                   loader={
-                    <S.LoadingMorePostsContainer>
+                    <S.LoadingMorePostsContainer key="loading-posts">
                       <Oval
                         height={36}
                         width={36}
@@ -125,7 +125,9 @@ const MainPage = ({
                   {children ? (
                     children
                   ) : (
-                    <S.SpecialMessage>{noPostsMessage}</S.SpecialMessage>
+                    <S.SpecialMessage key="no-posts">
+                      {noPostsMessage}
+                    </S.SpecialMessage>
                   )}
                 </InfiniteScroll>
               </S.PostListing>

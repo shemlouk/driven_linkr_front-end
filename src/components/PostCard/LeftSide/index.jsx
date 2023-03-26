@@ -1,20 +1,28 @@
 import { useCallback, useContext, useState, useEffect } from "react";
 import { SessionContext } from "../../../hooks/SessionContext";
+import { ModalContext } from "../../../hooks/ModalContext";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
-import { AiOutlineComment } from "react-icons/ai";
 import PostContext from "../../../hooks/PostContext";
+import { AiOutlineComment } from "react-icons/ai";
 import "react-tooltip/dist/react-tooltip.css";
+import { BiRepost } from "react-icons/bi";
 import { Tooltip } from "react-tooltip";
 import API from "../../../config/api";
 import "../../../assets/tooltip.css";
 import * as S from "./styles";
 
-const LeftSide = ({showComments, setShowComments, numberComments}) => {
+const LeftSide = ({
+  setShowComments,
+  numberComments,
+  numberReposts,
+  showComments,
+}) => {
   const { profilePicture, profile_picture, likes_count, likes_names, id } =
     useContext(PostContext);
-  const [isLoading, setIsLoading] = useState(false);
   const [numberLikes, setNumberLikes] = useState(Number(likes_count) || 0);
   const [tooltipText, setTooltipText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { openModal } = useContext(ModalContext);
   const { session } = useContext(SessionContext);
   const [isLiked, setIsLiked] = useState(
     likes_names?.includes(session.user.name)
@@ -69,29 +77,41 @@ const LeftSide = ({showComments, setShowComments, numberComments}) => {
   }, [isLiked]);
 
   return (
-    <S.Container {...{ isLiked }}>
+    <S.Container>
       <img src={profilePicture || profile_picture} />
-      <div>
-        {isLiked ? (
-          <IoHeart onClick={updateLike} className="heart" />
-        ) : (
-          <IoHeartOutline onClick={updateLike} />
-        )}
-        <p
-          data-tooltip-id="who-liked"
-          data-tooltip-content={tooltipText}
-          data-tooltip-place="bottom"
-        >{numberLikes} likes</p>
-        <Tooltip
-          id="who-liked"
-          className="tooltip-two"
-          classNameArrow="tooltip-arrow"
-        />
-      </div>
-      <div>
-        <AiOutlineComment onClick={() => {setShowComments(!showComments)}}/>
-        <p>{`${numberComments || 0} comments`}</p>
-      </div>
+      <S.ButtonsContainer {...{ isLiked }}>
+        <div>
+          {isLiked ? (
+            <IoHeart onClick={updateLike} className="heart" />
+          ) : (
+            <IoHeartOutline onClick={updateLike} />
+          )}
+          <p
+            data-tooltip-id="who-liked"
+            data-tooltip-content={tooltipText}
+            data-tooltip-place="bottom"
+          >
+            {numberLikes} likes
+          </p>
+          <Tooltip
+            id="who-liked"
+            className="tooltip-two"
+            classNameArrow="tooltip-arrow"
+          />
+        </div>
+        <div>
+          <AiOutlineComment
+            onClick={() => {
+              setShowComments(!showComments);
+            }}
+          />
+          <p>{`${numberComments || 0} comments`}</p>
+        </div>
+        <div>
+          <BiRepost onClick={() => openModal(id, "repost")} />
+          <p>{`${numberReposts || 0} re-posts`}</p>
+        </div>
+      </S.ButtonsContainer>
     </S.Container>
   );
 };
