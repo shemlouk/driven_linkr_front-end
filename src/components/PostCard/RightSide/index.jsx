@@ -1,5 +1,6 @@
 import { IoTrashOutline, IoPencilSharp } from "react-icons/io5";
 import { SessionContext } from "../../../hooks/SessionContext";
+import { ModalContext } from "../../../hooks/ModalContext";
 import { useContext, useState, useRef } from "react";
 import PostContext from "../../../hooks/PostContext";
 import LinkPreview from "../../LinkPreview/index";
@@ -9,12 +10,13 @@ import API from "../../../config/api";
 import * as S from "./styles";
 
 const RightSide = () => {
-  const { id, user_id, name, description, openDeleteModal, selectHashtag } =
+  const { id, user_id, name, description, selectHashtag } =
     useContext(PostContext);
   const { isLoggedIn, session } = useContext(SessionContext);
-  const [isEditing, setIsEditing] = useState(false);
   const [descInput, setDescInput] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const { openModal } = useContext(ModalContext);
   const descRef = useRef(null);
 
   function startEdit() {
@@ -62,7 +64,10 @@ const RightSide = () => {
             >
               <IoPencilSharp />
             </span>
-            <span data-test="delete-btn" onClick={() => openDeleteModal(id)}>
+            <span
+              data-test="delete-btn"
+              onClick={() => openModal(id, "delete")}
+            >
               <IoTrashOutline />
             </span>
           </div>

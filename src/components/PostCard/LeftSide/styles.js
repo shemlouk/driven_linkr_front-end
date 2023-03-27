@@ -13,25 +13,30 @@ export const Container = styled.div`
     object-fit: cover;
     margin-bottom: 19px;
   }
+`;
 
+export const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
   div {
     width: 60px;
-    font-size: 2em;
     color: #ffffff;
     text-align: center;
 
     svg {
-      width: 22px;
-      &.heart{
+      font-size: 1.5em;
+      &.heart {
         color: ${({ isLiked }) => isLiked && "#AC0000"};
       }
     }
 
     p {
       font-size: 11px;
-      font-family: "Lato", sans-serif;
-      font-weight: 400;
       user-select: none;
+      font-family: "Lato", sans-serif;
+      margin-bottom: 15px;
     }
   }
 `;

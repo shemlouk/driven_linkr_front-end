@@ -12,7 +12,7 @@ export const Header = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
   @media (max-width: 768px) {
     min-width: 375px;
     padding: 0px;

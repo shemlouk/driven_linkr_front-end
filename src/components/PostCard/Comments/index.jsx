@@ -14,7 +14,8 @@ const schema = Joi.object({
 });
 
 export default function CommentSection(props) {
-  const { showComments, commentsList, setCommentsList, setNumberComments } = props;
+  const { showComments, commentsList, setCommentsList, setNumberComments } =
+    props;
   const { num_comments, id, user_id } = useContext(PostContext);
   const [sendingComment, setSendingComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +23,7 @@ export default function CommentSection(props) {
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    if(showComments && num_comments) {
+    if (showComments && num_comments) {
       searchComments();
     }
   }, [showComments]);
@@ -38,15 +39,18 @@ export default function CommentSection(props) {
       }
 
       await API.post("/comment", data, session.auth);
-      
+
       setNumberComments(commentsList.length + 1);
-      setCommentsList([...commentsList, {
-        id: session.user.id,
-        name: session.user.name,
-        profile_picture: session.user.profilePicture,
-        user_id: session.user.id,
-        ...data
-      }]);
+      setCommentsList([
+        ...commentsList,
+        {
+          id: session.user.id,
+          name: session.user.name,
+          profile_picture: session.user.profilePicture,
+          user_id: session.user.id,
+          ...data,
+        },
+      ]);
       setComment("");
       setSendingComment(false);
     } catch ({ response }) {
@@ -71,56 +75,64 @@ export default function CommentSection(props) {
   function returnStatusText(comment) {
     let status = "";
 
-    if(session.user.network.includes(comment.user_id)) status = " • following";
-    if(comment.user_id === user_id) status = " • post’s author";
+    if (session.user.network.includes(comment.user_id)) status = " • following";
+    if (comment.user_id === user_id) status = " • post’s author";
 
     return status;
   }
 
   return (
-    <S.Container isVisible={showComments}>
-      {showComments && 
-      <S.List>
-        {
-          isLoading? 
+    <S.Container isVisible={showComments} data-test="comment-box">
+      {showComments && (
+        <S.List>
+          {isLoading ? (
+            <S.Comment>
+              <LoadingCommentsSpinner />
+            </S.Comment>
+          ) : (
+            commentsList.map((c, i) => {
+              return (
+                <S.Comment key={i} data-test="comment">
+                  <S.UserPicture src={c.profile_picture} />
+                  <S.MessageContainer>
+                    <div>
+                      <S.UserName>{c.name}</S.UserName>
+                      <S.UserStatus>{returnStatusText(c)}</S.UserStatus>
+                    </div>
+                    <S.Message>{c.message}</S.Message>
+                  </S.MessageContainer>
+                </S.Comment>
+              );
+            })
+          )}
           <S.Comment>
-            <LoadingCommentsSpinner />
-          </S.Comment>
-          :
-          commentsList.map((c, i) => {
-            return (<S.Comment key={i}>
-              <S.UserPicture src={c.profile_picture} />
-              <S.MessageContainer>
-                <div>
-                  <S.UserName>{c.name}</S.UserName>
-                  <S.UserStatus>{returnStatusText(c)}</S.UserStatus>
-                </div>
-                <S.Message>{c.message}</S.Message>
-              </S.MessageContainer>
-            </S.Comment>)
-          })
-        }
-        <S.Comment>
-          <S.UserPicture src={session.user.profilePicture} />
-          <S.InputContainer>
-            <S.Input type="text" placeholder="write a comment..." value={comment} onChange={(e) => setComment(e.target.value)}/>
-            {sendingComment ?
-              <Oval
-                height={19}
-                width={19}
-                color="#fff"
-                visible={true}
-                ariaLabel='oval-loading'
-                secondaryColor="#565656"
-                strokeWidth={2}
-                strokeWidthSecondary={4}
+            <S.UserPicture src={session.user.profilePicture} />
+            <S.InputContainer>
+              <S.Input
+                data-test="comment-input"
+                type="text"
+                placeholder="write a comment..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
               />
-              :
-              <BsSend onClick={submit}
-            />}
-          </S.InputContainer>
-        </S.Comment>
-      </S.List>}
+              {sendingComment ? (
+                <Oval
+                  height={19}
+                  width={19}
+                  color="#fff"
+                  visible={true}
+                  ariaLabel="oval-loading"
+                  secondaryColor="#565656"
+                  strokeWidth={2}
+                  strokeWidthSecondary={4}
+                />
+              ) : (
+                <BsSend data-test="comment-submit" onClick={submit} />
+              )}
+            </S.InputContainer>
+          </S.Comment>
+        </S.List>
+      )}
     </S.Container>
   );
 }

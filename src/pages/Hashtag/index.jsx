@@ -3,10 +3,8 @@ import HashtagContext from "../../hooks/HashtagContext";
 import { useContext, useEffect, useState } from "react";
 import PostCard from "../../components/PostCard";
 import { useNavigate } from "react-router-dom";
-import Trending from "../../layouts/Trending";
-import Header from "../../layouts/Header";
-import * as P from "../Timeline/styles";
 import API from "../../config/api";
+import MainPage from "../../layouts/MainPage";
 
 export default function Hashtag() {
   const { hashtag, setHashtag } = useContext(HashtagContext);
@@ -20,19 +18,19 @@ export default function Hashtag() {
       return navigate("/timeline");
     }
 
-    async function getPostsWithHashtag() {
-      try {
-        const res = (await API.get(`/hashtag/${hashtag.id}`, session.auth))
-          .data;
-        setPostList(res.slice(0, 20));
-        setIsLoading(false);
-      } catch (error) {
-        console.error(`getPostWithHashtag: ${error}`);
-      }
-    }
-
     getPostsWithHashtag();
   }, [hashtag]);
+
+  async function getPostsWithHashtag() {
+    try {
+      const res = (await API.get(`/hashtag/${hashtag.id}`, session.auth))
+        .data;
+      setPostList(res.slice(0, 20));
+      setIsLoading(false);
+    } catch (error) {
+      console.error(`getPostWithHashtag: ${error}`);
+    }
+  }
 
   async function selectHashtag(hashtag) {
     hashtag = hashtag.replace("#", "");
@@ -50,28 +48,19 @@ export default function Hashtag() {
 
   return (
     <>
-      <Header />
-      <P.PageContainer>
-        <P.TitleBox data-test="hashtag-title">
-          {`# ${hashtag?.name}`}
-        </P.TitleBox>
-        <P.ContentWrapper>
-          <P.PostWrapper>
-            <P.PostListing>
-              {isLoading ? (
-                <P.SpecialMessage>Loading...</P.SpecialMessage>
-              ) : postList.length > 0 ? (
-                postList.map((post) => (
-                  <PostCard key={post.id} {...{ ...post, selectHashtag }} />
-                ))
-              ) : (
-                <P.SpecialMessage>There are no posts yet.</P.SpecialMessage>
-              )}
-            </P.PostListing>
-          </P.PostWrapper>
-          <Trending />
-        </P.ContentWrapper>
-      </P.PageContainer>
+      <MainPage
+        title={`# ${hashtag?.name}`}
+        loadMoreFunction={getPostsWithHashtag}
+        postsAreLoading={isLoading}
+      >
+        {postList.length > 0 &&
+          postList.map((post) => (
+            <PostCard
+              key={post.id}
+              {...{ ...post, selectHashtag }}
+            />
+          ))}
+      </MainPage>
     </>
   );
 }

@@ -79,7 +79,12 @@ const SearchBar = () => {
                   inputRef.current.state.value = "";
                 }}
               >
-                <Link to={`/user/${user.id}`} data-test="user-search">
+                <Link
+                  to={`/user/${user.id}`}
+                  data-test={
+                    user.isFollowing ? "user-search-following" : "user-search"
+                  }
+                >
                   <img src={user.profilePicture} />
                   <span>{user.name}</span>
                 </Link>

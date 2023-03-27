@@ -46,14 +46,31 @@ export const PostListing = styled.div`
 `;
 
 export const SpecialMessage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Oswald", sans-serif;
-  font-weight: 700;
-  font-size: 32px;
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  text-align: center;
   color: white;
-  letter-spacing: 0.1em;
+  text-align: center;
+`;
+
+export const LoadingMorePostsContainer = styled.div`
+  height: 78px;
+  display: flex;
+  margin-top: 60px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const LoadingMessage = styled.p`
+  color: #6d6d6d;
+  font-size: 22px;
+  line-height: 26px;
+  text-align: center;
+  letter-spacing: 0.05em;
 `;
 
 export const FollowButton = styled.button`
