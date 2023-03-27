@@ -7,9 +7,11 @@ import MainPage from "../../layouts/MainPage/index";
 import { useNavigate } from "react-router-dom";
 import API from "../../config/api";
 import { useInterval } from "@react-hooks-library/core";
+import { PublishContext } from "../../hooks/PublishContext";
 
 const Timeline = () => {
   const { setHashtag } = useContext(HashtagContext);
+  const { updateList } = useContext(PublishContext)
   const [isLoading, setIsLoading] = useState(false);
   const { session } = useContext(SessionContext);
   const { idDeleted } = useContext(ModalContext);
@@ -64,7 +66,10 @@ const Timeline = () => {
     getAllPosts();
   }, []);
 
-  useInterval(checkNewPosts, 5000);
+  useEffect(() => {
+  }, [updateList]);
+
+  useInterval(checkNewPosts, 15000);
 
   async function checkNewPosts() {
     try {
