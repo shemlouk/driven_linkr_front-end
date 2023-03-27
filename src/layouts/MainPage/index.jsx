@@ -111,7 +111,7 @@ const MainPage = ({
               }
               <S.PostListing>
                 <InfiniteScroll
-                  key={offset}
+                  key={`${offset}`}
                   pageStart={0}
                   hasMore={hasMore}
                   loadMore={loadMoreFunction}

@@ -25,6 +25,7 @@ const Timeline = () => {
   async function getPosts() {
     if (!postList.length) {
       setIsLoading(true);
+      console.log(`Getting posts with offset: ${offset}`);
     }
     try {
       const res = await API.get(`/timeline?offset=${offset}`, session.auth);
@@ -61,7 +62,7 @@ const Timeline = () => {
     getAllPosts()
   }, [])
 
-  useInterval(checkNewPosts, 15000)
+  useInterval(checkNewPosts, 5000)
 
   async function checkNewPosts() {
     try {
@@ -81,10 +82,10 @@ const Timeline = () => {
   }
 
   async function refreshPostList() {
-    setOffset(0)
-    setPostList([])
-    setIsLoading(true)
-    setHasMorePosts(false)
+    setIsLoading(true);
+    setOffset(0);
+    setHasMorePosts(false);
+    setPostCount(0);
     await getPosts()
   }
 
