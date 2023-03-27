@@ -10,6 +10,7 @@ import Trending from "../Trending/index";
 import Header from "../Header/index";
 import API from "../../config/api";
 import * as S from "./styles";
+import LoadPostBox from "../../components/LoadPostsBox";
 
 const MainPage = ({
   loadMoreFunction,
@@ -17,8 +18,11 @@ const MainPage = ({
   profilePicture,
   children,
   hasMore,
+  hasMorePosts,
   offset,
   title,
+  postCount,
+  refreshPostList
 }) => {
   const [_, path] = useLocation().pathname.split("/");
   const [isLoading, setIsLoading] = useState(false);
@@ -98,9 +102,16 @@ const MainPage = ({
           ) : (
             <S.PostWrapper>
               {path === "timeline" && user && <WritePost />}
+              {hasMorePosts ? 
+                <LoadPostBox
+                    refreshPostList={refreshPostList}
+                    newPosts={postCount}
+                /> 
+                : null
+              }
               <S.PostListing>
                 <InfiniteScroll
-                  key={offset}
+                  key={`${offset}`}
                   pageStart={0}
                   hasMore={hasMore}
                   loadMore={loadMoreFunction}
