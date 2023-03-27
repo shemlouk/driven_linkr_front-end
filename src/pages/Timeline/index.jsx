@@ -6,7 +6,7 @@ import PostCard from "../../components/PostCard/index";
 import MainPage from "../../layouts/MainPage/index";
 import { useNavigate } from "react-router-dom";
 import API from "../../config/api";
-import { useInterval } from "@react-hooks-library/core"
+import { useInterval } from "@react-hooks-library/core";
 
 const Timeline = () => {
   const { setHashtag } = useContext(HashtagContext);
@@ -16,10 +16,10 @@ const Timeline = () => {
   const [postList, setPostList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
-  const [allPosts, setAllPosts] = useState([])
-  const [hasMorePosts, setHasMorePosts] = useState(false)
-  const [newPosts, setNewPosts] = useState([])
-  const [postCount, setPostCount] = useState(0)
+  const [allPosts, setAllPosts] = useState([]);
+  const [hasMorePosts, setHasMorePosts] = useState(false);
+  const [newPosts, setNewPosts] = useState([]);
+  const [postCount, setPostCount] = useState(0);
   const navigate = useNavigate();
 
   async function getPosts() {
@@ -29,6 +29,8 @@ const Timeline = () => {
     }
     try {
       const res = await API.get(`/timeline?offset=${offset}`, session.auth);
+
+      console.log(res.data);
 
       if (res.data.length === 0) {
         setHasMore(false);
@@ -49,8 +51,8 @@ const Timeline = () => {
     try {
       const res = await API.get(`/timeline/posts`, session.auth);
 
-      setAllPosts(res.data)
-      console.log(res.data.length)
+      setAllPosts(res.data);
+      console.log(res.data.length);
     } catch ({ response }) {
       alert(
         "An error occurred while trying to fetch the posts, please refresh the page."
@@ -59,34 +61,41 @@ const Timeline = () => {
   }
 
   useEffect(() => {
-    getAllPosts()
-  }, [])
+    getAllPosts();
+  }, []);
 
-  useInterval(checkNewPosts, 5000)
+  useInterval(checkNewPosts, 5000);
 
   async function checkNewPosts() {
     try {
       const res = await API.get(`/timeline/posts`, session.auth);
-      setNewPosts(res.data)
 
-      if (newPosts.length > allPosts.length) {
-        setHasMorePosts(true)
-        setAllPosts(newPosts)
+      const date = new Date(postList[0].rb_created_at);
+
+      const filteredNewPosts = res.data.filter(
+        (p) => new Date(p.created_at) > date
+      );
+
+      setNewPosts(filteredNewPosts);
+
+      if (newPosts.length) {
+        setHasMorePosts(true);
       }
 
-      const newPostCount = (newPosts.length - allPosts.length)
-      setPostCount(newPostCount)
+      setPostCount(newPosts.length);
     } catch ({ response }) {
-      console.log(response)
+      console.log(response);
     }
   }
 
   async function refreshPostList() {
-    setIsLoading(true);
-    setOffset(0);
+    if (!hasMorePosts) return;
+    newPosts.forEach((p) => (p.rb_created_at = p.created_at));
+    setPostList([...newPosts, ...postList]);
+    setOffset(offset + newPosts.length);
     setHasMorePosts(false);
     setPostCount(0);
-    await getPosts()
+    setNewPosts([]);
   }
 
   async function selectHashtag(hashtag) {
