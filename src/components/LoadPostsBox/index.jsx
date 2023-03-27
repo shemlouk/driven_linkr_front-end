@@ -4,7 +4,7 @@ import { IoReloadSharp } from "react-icons/io5";
 
 const LoadPostBox = ({ newPosts,refreshPostList }) => {
     return (
-        <Container onClick={refreshPostList}>
+        <Container data-test="load-btn" onClick={refreshPostList}>
             <p>
                 {newPosts} new posts, load more! <IoReloadSharp />
             </p>
